@@ -1,0 +1,1337 @@
+package pb;
+import "enum.proto";
+import "object.proto";
+
+// 登录
+message CSLogin {
+	required uint64 player_id = 1;
+}
+
+message SCLogin {
+	required uint32 error_code = 1;
+}
+
+// 创建玩家
+message SCCreatePlayer {
+}
+
+message CSCreatePlayer {
+	required string name = 1;
+	required uint32 proto_id = 2;
+}
+
+// 初始化序列
+message CSRequestInit {
+	required EInitType type = 1;		// 初始化类型
+}
+
+// 调试用echo
+message CSEcho {
+	required string msg = 1;
+	optional uint32 crc = 2;
+}
+
+message SCEcho {
+	required string msg = 1;
+	optional uint32 crc = 2;
+}
+
+message SCErrorInfo {
+	required string msg = 1;
+}
+
+// 战斗相关
+message CSCombat {
+	optional uint32 monster_formationid = 1;
+	optional uint64 playerid = 2;
+	optional int32 jue_skill_index = 3;
+}
+
+message SCCombat {
+	required PbCombat combat = 1;
+	required uint32 scene_protoid = 2;
+}
+
+// 玩家初始化 远程玩家信息 场景同步消息 ---------------------------------------------------------------------------------------------------------
+// 玩家初始化信息
+message SCPlayerInitInfo {
+	required uint64 playerid = 1;				// id
+	required uint32 protoid = 2;				// 原型id
+	required string name = 3;					// 名字
+	required int32 level = 4;					// 等级
+	required int64 yuanbao = 5;					// 元宝
+	required int64 tongqian = 6;				// 铜钱
+	required int32 HP = 7;						// 最大生命
+	required int32 power = 8;					// 体力
+	required int32 move_speed = 9;				// 速度	
+	required int32 wjgz_changshi_count = 10;	// 万剑归宗尝试次数
+	required int32 wjgz_yungong_count = 11;		// 万剑归宗运功次数
+	required int32 wjgz_zhidao_count = 12;		// 万剑归宗指导次数
+	repeated int32 wjgz_jian_type = 13;			// 万剑归宗剑类型
+	required int32 wjgz_today_jian_type = 14;	// 万剑归宗今日剑类型
+	repeated PbStatus status = 15;				// 当前状态
+}
+
+// 切换场景
+message CSChangeScene {
+	required uint32 dst_sceneid = 1;	// 目的场景
+}
+
+// 远程玩家移动消息
+message CSMove {
+	required PbPlayerMove player_move = 1;	// 移动消息
+}
+
+message SCRemoteMove {
+	required uint64 playerid = 1;			// 玩家id
+	required PbPlayerMove player_move = 2;	// 移动消息
+}
+
+// 玩家进入场景（自己进场景）
+message SCPlayerEnterScene {
+	required uint32 scene_id = 1;	// 场景id
+	required int32 pos_x = 2;					// 自己的x
+	required int32 pos_y = 3;					// 自己的y
+}
+
+// 加入远程玩家（远程玩家进入场景）
+message SCAddRemotePlayer{
+	repeated PbRemotePlayerInfo remote_player = 1;	// 远程玩家
+}
+
+// 移除远程玩家（远程玩家离开场景）
+message SCRemoveRemotePlayer {
+	required uint64 removed_playerid = 1;	// id
+}
+
+// gm命令
+message CSGmCmd {
+	required string command = 1;
+}
+
+message SCGmCmd {
+	required string ret = 1;
+}
+
+
+// 角色详细信息，远程和本地 --------------------------------------------------------------------------------
+message CSPlayerDetailInfo {
+	optional uint64 playerid = 1;	// 角色信息
+}
+
+message SCPlayerDetailInfo {
+	repeated PbRoleDetailInfo role_detail_info = 1;		// 角色信息
+	required int32 pvp_rank = 2;				// 竞技场排名
+	required uint32 current_jue_skilid = 3;			// 当前绝技id
+	required int32 repute = 4;				// 声望
+	required int32 remain_points = 5;			// 可投的属性点
+}
+
+message CSPlayerSimpleInfo {
+	required uint64 playerid = 1;
+}
+
+message SCPlayerSimpleInfo {
+	required PbSimplePlayer playerinfo = 1;
+}
+
+// 洗点
+message CSResetPoints {
+}
+
+// 投点
+message CSAssignPoints {
+	repeated int32 points = 1;
+}
+
+// 点数变化
+message SCPointsChange {
+	required int32 role_protoid = 1;
+	repeated int32 points = 2;
+	required int32 remain = 3;
+}
+
+// 属性
+message SCAttChange {
+	required uint32 role_protoid = 1;
+	repeated PbAttValue att = 2;
+}
+
+// 经验
+message SCExp {
+	required uint32 role_protoid = 1;
+	required int64 exp = 2;
+}
+
+// 等级
+message SCLevel {
+	required uint32 role_protoid = 1;
+	required int64 level = 2;
+}
+
+// 体力
+message SCPower {
+	required int32 power = 1;		
+}
+
+// 副本消息 ---------------------------------------------------------------------------------------------------------
+message SCCurrencyInit {
+	repeated int64 currency = 1;
+}
+
+message SCCurrency {
+	required ECurrencyType type = 1;
+	required int64 value = 2;
+}
+
+
+// 副本消息 ---------------------------------------------------------------------------------------------------------
+// 进入副本
+message CSEnterInstance {
+	required uint32 instanceid = 1;		// 进入的副本id
+}
+
+message SCEnterInstance {
+	required uint32 instanceid = 1;		// 进入的副本id
+}
+
+// 副本中的战斗
+message CSInstanceCombat {
+	
+}
+
+message SCInstanceCombat {
+	required PbCombat combat = 1;			// 战斗
+	required uint32 monsteridx = 2;			// 怪物索引
+	optional PbReward reward = 3;			// 奖励
+}
+
+// 副本完成
+message SCInstanceComplete {
+	required uint32 instanceid = 1;			// 副本id
+	required PbReward reward = 2;			// 奖励
+	// 评分
+}
+
+// 离开副本
+message CSLeaveInstance {
+}
+
+message SCLeaveInstance {
+}
+
+// 扫荡
+message CSInstanceSaoDang {
+	required uint32 instanceid = 1;			// 副本id
+	required bool auto_sell = 2;			// 自动卖店
+}
+
+message SCInstanceSaoDang {
+	required uint32 instanceid = 1;			// 副本id
+	required PbReward reward = 2;			// 奖励
+}
+
+// 副本初始化
+message SCInstanceInit {
+	required uint32 cur_instanceid = 1;		// 当前打过的副本
+	// 评分
+}
+
+
+// 任务 --------------------------------------------------------------------------------
+
+// 任务初始化
+message SCTaskInit {
+	repeated uint32 completed = 1;					// 已完成
+	repeated PbTask current = 2;					// 已接任务
+}
+
+// 接受任务
+message CSTaskAccept {
+	required uint32 taskid = 1;					// 任务id
+}
+message SCTaskAccept {
+	required uint32 taskid = 1;					// 任务id
+}
+
+// 任务条件更新
+message SCTaskUpdate {
+	repeated PbTask updated = 1;					// 更新的任务
+}
+
+// 交任务
+message CSTaskCommit {
+	required uint32 taskid = 1;					// 任务id
+	required int32 selected_item_index = 2;		// 选中物品的索引
+}
+message SCTaskCommit {
+	required uint32 taskid = 1;					// 任务id
+}
+
+// 取消任务
+message CSTaskCancel {
+	required uint32 taskid = 1;					// 任务id
+}
+message SCTaskCancel {
+	required uint32 taskid = 1;					// 任务id
+}
+
+// 物品 --------------------------------------------------------------------------------
+message SCItemInit {
+	required PbContainer bag = 1;					// 背包
+	required PbContainer store = 2;					// 仓库
+}
+
+// 物品移动
+message CSItemMove {
+	required int32 src_con = 1;		// 原容器
+	required int32 dst_con = 2;		// 目的容器
+	required int32 src_slot = 3;				// 原格子
+	required int32 dst_slot = 4;				// 目的各自
+}
+
+// 物品更新
+message SCItemUpdate {
+	repeated PbItem item = 1;					// 改变的所有物品
+}
+
+// 容器扩展
+message CSConExpend {
+	required int32 con = 1;			// 容器类型
+	required int32 expend_num = 2;				// 扩充大小
+}
+
+message SCConExpend {
+	required int32 con = 1;			// 容器类型
+	required int32 expend_num = 2;				// 扩充大小
+}
+
+// 整理容器
+message CSConSort {
+	required int32 con = 1;			// 背包
+}
+
+// 删除物品
+message CSItemDel {
+	required int32 con = 1;			// 容器
+	required int32 slot = 2;		// 格子
+}
+
+// 铸造
+message CSItemForge {
+	required int32 con = 1;			// 容器
+	required int32 slot = 2;		// 格子
+}
+
+message SCItemForgeOk {
+}
+
+// 淬灵
+message CSItemCuiling {
+	required int32 con = 1;			// 容器
+	required int32 slot = 2;		// 格子
+}
+
+
+// 装备合成
+message CSEquipCombin {
+	required int32 equip_con = 1;		// 装备容器
+	required int32 equip_slot = 2;		// 装备格子
+	
+	required int32 scroll_slot = 3;		// 卷轴格子
+	
+	required bool stable = 4;			// 保持品质和等级
+}
+
+// 阵法 --------------------------------------------------------------------------------
+message SCFormationInit {
+	required int32 formation_level = 1;	// 阵法等级
+	repeated int32 formation = 2;		// 当前阵法		伙伴的索引
+}
+
+message CSSetFormation {
+	repeated int32 formation = 1;		// 阵法
+}
+
+message SCFormationUpdate {
+	repeated int32 formation = 1;		// 阵法
+}
+
+message CSFormationLevelUp {
+	
+}
+
+message SCFormationLevelUp {
+	required int32 formation_level = 1;	// 阵法等级
+}
+
+// 防沉迷 --------------------------------------------------------------------------------
+message SCAntiAddictionEnable {
+	required bool enable = 1;			// 开关
+}
+
+message SCAntiAddictionTimer {
+	required int32 acc_online_seconds = 1;	// 累计在线时间
+}
+
+// 伙伴招募 --------------------------------------------------------------------------------
+message SCPartnerRecruitInit {
+	repeated uint32 recruited_roleid = 1;	// 已经招募的
+	repeated uint32 dequeued_roleid = 2;	// 已经离队的
+}
+
+message CSRecruitPartner {
+	required uint32 partnerid = 1;		// 伙伴id
+}
+
+message SCRecruitPartner {
+	required uint32 partnerid = 1;		// 伙伴id
+}
+
+message CSDequeuePartner {
+	required uint32 partnerid = 1;		// 伙伴id
+}
+
+message SCDequeuePartner {
+	required uint32 partnerid = 1;		// 伙伴id
+}
+
+// roleinfo
+message SCRoleInfoInit {
+	repeated PbRoleDetailInfo role_detail_info = 1;	// 角色信息
+}
+
+// addrole
+message SCAddRole {
+	required PbRoleDetailInfo role_detail_info = 1;	// 角色信息
+}
+
+// delrole
+message SCDelRole {
+	required uint32 roleid = 1;						// 删除
+}
+
+// 过关斩将 --------------------------------------------------------------------------------
+message CSGGZJInit {
+	
+}
+
+message SCGGZJInit {
+	required int32 map_id = 1;			// 地图id
+	required int32 cur_pos = 2;			// 当前位置
+	required int32 cast_num = 3;		// 剩余投掷数
+	repeated int32 card = 4;			// 手上的卡牌
+	
+	repeated PbGGZJBuff gbuff = 5;		// buff
+	required int32 buy_cast_num_times = 6;	// 今日购买投掷次数的次数
+	required int32 buy_card_times = 7;	// 今日购买卡片的次数
+}
+
+message CSGGZJStartRound {
+}
+
+message CSGGZJUseCard {
+	required int32 card_index = 1;
+}
+
+message CSGGZJBuyCastNum {
+
+}
+
+message CSGGZJBuyCard {
+
+}
+
+// 丢弃卡牌
+message CSGGZJDiscardCard {
+	required int32 card_index = 1;		// 卡牌
+}
+
+message SCGGZJPlayRound {
+	optional int32 dice_num = 1;		// 掷骰子的数
+	repeated PbGGZJAction actions = 2;	// 播放序列
+}
+
+// 商店 --------------------------------------------------------------------------------
+message CSBuyItem {
+	required uint32 shopid = 1;			// 物品在商店中索引 -1 的话买回购物品
+	required int32 buy_num = 2;			// 购买数目
+	required int32 item_index = 3;		// 物品在商店中索引
+	required int32 bag_slot = 4;		// 放入背包的位置
+}
+
+message CSSellItem {
+	required int32 item_slot = 1;		// 背包中物品位置
+}
+
+message SCAddBuyback {
+	required PbItem item_added = 1;		// 添加到回购列表结尾的物品
+}
+
+message SCDelBuyback {
+	required int32 item_index = 1;		// 从回购列表中删除的物品
+}
+
+message SCBuybackInit {
+	repeated PbItem item = 1;			// 回购列表中的物品
+}
+
+message SCClearBuyback {
+
+}
+
+// 多人副本 --------------------------------------------------------------------------------
+// 开始战斗
+message CSTeamStartSingleCombat {
+	required uint32 fmzzid = 1;			// 疯魔之战id
+}
+
+
+// 查询队伍列表
+message CSTeamQueryList {
+	required uint32 fmzzid = 1;			// 疯魔之战id
+}
+
+// 创建队伍
+message CSTeamCreate {
+}
+
+// 随便挑个队伍马上开打
+message CSTeamQuickJoin {
+}
+
+// 我要加入队伍
+message CSTeamJoin {
+	required uint32 teamid = 1;			// 队伍id
+}
+
+// 离开队伍
+message CSTeamLeave {
+	required uint64 memberid = 1;		// 队员
+}
+
+// 设置成员位置
+message CSTeamSetMemberPos {
+	repeated uint64 memberid = 1;		// 队员
+}
+
+// 设置队伍信息 比如自动开战什么的
+message CSTeamSetInfo {
+	required bool auto_start = 1;		// 自动开战
+}
+
+// 开始战斗
+message CSTeamStartCombat {
+}
+
+// 队伍列表
+message SCTeamList {
+	repeated PbTeamSimpleInfo team = 1;		// 队伍
+}
+
+// 队伍信息，进入队伍后的第一个消息
+message SCTeamInfo {
+	required uint32 teamid = 1;		// 队伍id
+	required bool auto_start = 2;		// 自动开战
+	required uint64 leaderid = 3;		// 队长id
+	repeated PbTeamMemberInfo members = 4;	// 队伍成员
+}
+
+// 队伍成员更新，每次人员或位置变化时发
+message SCTeamMemberUpdate {
+	repeated PbTeamMemberInfo members = 1;		// 队员
+}
+
+// 战斗结果
+message SCTeamCombat {
+	required PbCombatNvN combat_nvn = 1;	// 大战啊
+}
+
+// 自动启动
+message SCTeamAutoStart {
+	required bool auto_start = 1;		// 自动启动
+}
+
+// 疯魔之战奖励
+message SCFMZZReward {
+	required PbReward reward = 1;		// 奖励
+}
+
+// 封魔之战打开界面
+message CSFMZZInit {
+	
+}
+
+message SCFMZZInit {
+	repeated uint32 passed = 1;			// 通过的关卡
+}
+
+// 祭神 --------------------------------------------------------------------------------
+message SCJiShenInit {
+	repeated int32 jishen_level = 1;	// 祭神等级
+}
+
+message CSJiShen {
+	required uint32 shenid = 1;			// 神id
+}
+
+message SCJiShen {
+	required uint32 shenid = 1;			// 神id
+}
+ 
+// 万剑归宗 --------------------------------------------------------------------------------
+message CSWJGZCast {
+	optional bool yungong = 1;			// 若没有这个字段，则是尝试御剑，
+										// 若为真代表需要运功，若为假则代表指导
+	repeated int32 lock = 2;			// 锁定ID
+}
+
+// 确定了
+message CSWJGZCommit {
+	
+}
+
+// 次数更新
+message SCWJGZDataUpdate {
+	optional int32 changshi_count = 1;	// 尝试次数
+	optional int32 yungong_count = 2;	// 运功次数
+	optional int32 zhidao_count = 3;	// 指导次数
+	repeated int32 jian_type = 4;		// 剑类型
+	optional int32 today_jian_type = 5;	// 今日剑种类
+}
+
+// 炼心池 --------------------------------------------------------------------------------
+message CSLianXinChi {
+	
+}
+
+message SCLianXinChi {
+	repeated PbCombat combat = 1;		// 战斗
+	required PbReward reward = 2;		// 奖励
+	required int32 kill_num = 3;		// 杀数量
+	required int32 round_used = 4;		// 用了多少轮
+}
+
+// 好友 --------------------------------------------------------------------------------
+message CSFriendInit {
+}
+
+message CSFriendAdd {
+	required EFriendType type = 1;		// 好友类型
+	optional uint64 playerid = 2;
+	optional string playername = 3;
+}
+
+message CSFriendRemove {
+	required uint64 playerid = 1;
+	required EFriendType type = 2;
+}
+
+message SCFriendInit {
+	repeated PbSimplePlayer friends = 1;		// 好友
+	repeated PbSimplePlayer blacks = 2;		// 黑名单
+	repeated PbSimplePlayer recents = 3;		// 最近联系
+}
+
+message SCFriendAdd {
+	required PbSimplePlayer player = 1;
+	required EFriendType type = 2;
+}
+
+message SCFriendRemove {
+	required uint64 playerid = 1;
+	required EFriendType type = 2;
+}
+
+message SCFriendLogOn {
+	required uint64 playerid = 1;
+	required EFriendType type = 2;
+}
+
+message SCFriendLogOff {
+	required uint64 playerid = 1;
+	required EFriendType type = 2;
+}
+
+message SCFriendPrompt {
+	required PbSimplePlayer player = 1;
+	required EFriendType type = 2;
+}
+
+// timer --------------------------------------------------------------------------------
+message CSPing {
+	required int32 stamp = 1;			// 时间戳
+}
+message SCPing {
+	required int32 stamp = 1;			// 时间戳
+}
+
+// 状态 --------------------------------------------------------------------------------
+message SCStatusUpdate {
+	repeated PbStatus updated = 1;		// 更新的
+	repeated uint32 removed_id = 2;		// 删除的
+}
+
+// 竞技场 ------------------------------------------------------------------------------
+message CSArenaOpen {
+}
+
+message SCArenaOpen {
+	repeated PbArenaCombatLog combat_log = 1;		// 战斗日志
+}
+
+message CSArenaChallenge {
+	required int32 index = 1;						// 索引
+}
+
+message CSArenaRefresh {
+}
+
+message SCArenaChallenge {
+	required PbCombat combat = 1;					// 战斗
+	optional PbReward reward = 2;					// 奖励
+	required uint64 opponent = 3;					// 对方id
+	required string opponent_name = 4;				// 对方名字
+	required int32 rank1v1 = 5;						// 新排名
+}
+
+message SCArenaRefresh {
+	required int32 rank = 1;						// 排名
+	required int32 score = 2;						// 积分
+	repeated PbArenaPlayerInfo arena_player = 3;	// 本次刷新的玩家
+	required int32 refresh_num = 4;					// 刷新次数
+}
+
+message SCArenaRankData {
+	required int32 rank = 1;						// 排名
+	required int32 score = 2;						// 积分
+}
+
+// 聊天 --------------------------------------------------------------------------------
+message CSChat {
+	required EChatChannel channel = 1;
+	required string content = 2;
+}
+
+message CSPrivateChat {
+	required uint64 playerid = 1;
+	required string content = 2;
+}
+
+message CSReadOfflineChat {
+	required uint64 playerid = 1;
+}
+
+message SCChat {
+	required EChatChannel channel = 1;
+	required string content = 2;
+	optional PbSimplePlayer player = 3;
+}
+
+message SCPrivateChat {
+	required uint64 src = 1;
+	required uint64 dest = 2;
+	required string content = 3;
+}
+
+message SCOfflineChat {
+	repeated PbOfflineChat chat = 1;
+}
+
+// 降魔宝典 -----------------------------------------------------------------------------
+message SCXMBDInit {
+	repeated PbXMBDSceneInfo scene_info = 1; 
+}
+
+message SCXMBDUpdate {
+	required PbXMBDSceneInfo scene_info = 1; 
+}
+
+message CSXMBDReset {
+	required uint32 sceneid = 1;
+	required bool reset_boss = 2;
+}
+
+message CSXMBDSaoDang {
+	required uint32 sceneid = 1;
+	required int32 monster_index = 2;
+}
+
+message SCXMBDSaoDang {
+	optional PbReward reward = 1;
+}
+
+// 帮派 --------------------------------------------------------------------------------
+// 添加成员
+message SCGuildAddMember {
+	required PbGuildMemberInfo new_member = 1;
+}
+// 删除成员
+message SCGuildDelMember {
+	required uint64 playerid = 1;
+}
+// 公告更新
+message SCGuildNoticeUpdate {
+	required string notice = 1;
+}
+// 名字更新
+message SCGuildNameUpdate {
+	required string name = 1;
+}
+// boss刷新时间更新
+message SCGuildBossRefreshTimeUpdate {
+	
+}
+// 成员职位改变
+message SCGuildMemberPositionUpdate {
+	required uint64 memberid = 1;
+	required EGuildPosition new_position = 2;
+}
+// 帮贡更新
+message SCGuildContributionUpdate {
+	required uint64 memberid = 1;
+	required int32 new_contribution = 2;
+}
+// 解散
+message SCGuildDismiss {
+	
+}
+// 帮派列表
+message SCGuildList {
+	repeated PbGuildSimpleInfo guild_simple_info = 1;
+}
+// 被邀请入帮
+message SCGuildInvited {
+	required uint64 inviterid = 1;
+	required string invitername = 2;
+	required uint32 guildid = 3;
+	required string guildname = 4;
+}
+
+// 被邀请入帮
+message SCGuildInviteResult {
+	required string invited_name = 1;
+	required bool accept = 2;
+};
+
+// 帮派详细信息
+message SCGuildDetail {
+	required PbGuildDetailInfo guild_info = 1;
+}
+
+// 帮派初始化
+message SCGuildInit {
+	required PbGuildDetailInfo guild_info = 1;
+}
+
+// 随机两个在线玩家
+message SCGuildRandPlayer {
+	repeated PbSimplePlayer player = 1;
+};
+
+// 随机找两个在线玩家
+message CSGuildRandPlayer {
+}
+
+// 找帮派
+message CSGuildSearch {
+	optional string guild_name = 1;
+	optional string master_name = 2;
+};
+
+
+// 获取帮派列表
+message CSGuildList {
+	required int32 start = 1;
+}
+// 创建
+message CSGuildCreate {
+	required string name = 1;
+}
+// 查询帮派详细信息
+message CSGuildLookupInfo {
+	required uint32 guildid = 1;
+}
+// 改变名字
+message CSGuildChangeName {
+	required string name = 1;
+}
+// 改变公告
+message CSGuildChangeNotice {
+	required string notice = 1;
+}
+// 降职
+message CSGuildDemotion {
+	required uint64 memberid = 1;
+}
+// 踢出
+message CSGuildDismissal {
+	required uint64 memberid = 1;
+}
+// 升职
+message CSGuildPromote {
+	required uint64 memberid = 1;
+}
+// 禅让
+message CSGuildDemise {
+	required uint64 memberid = 1;
+}
+// 解散
+message CSGuildDismiss {
+}
+// 退出
+message CSGuildQuit {
+}
+// 邀请
+message CSGuildInvite {
+	optional uint64 playerid = 1;
+	optional string playername = 2;
+}
+// 被邀请
+message CSGuildInvited {
+	required uint32 guildid = 1;
+	required bool accept = 2;
+}
+
+// 运输 -------------------------------------------------------------------------------
+message CSTransportOpen{
+}
+
+message CSTransportClose{
+}
+
+message CSTransportStart{
+    required uint32 treasure = 1;
+    required bool matcher = 2;
+    required bool escort = 3;
+}
+
+message CSTransportIntercept{
+    required uint64 player = 1;
+}
+
+message CSTransportDanceInSky{
+}
+
+message CSTransportInviteEscort{
+    required uint64 invited_escort = 1;
+}
+
+message CSTransportAnswerEscort{
+    required uint64 inviter = 1;
+    required bool accept = 2;
+}
+
+message SCTransportOpen{
+    repeated PbTransport transport = 1;
+}
+
+message SCTransportIntercept{
+    required uint64 sender = 1;
+    required uint32 treasure = 2;
+    required PbCombat combat = 3;
+}
+
+message SCTransportInvitedEscort{
+    required uint64 inviter = 1;
+}
+
+message SCTransportAnswerEscort{
+    required uint64 invited = 1;
+    required bool accept = 2;
+}
+
+message SCTransportUpdate{
+    repeated PbTransport transport = 1;
+    repeated uint64 expire = 2;
+}
+
+// all --------------------------------------------------------------------------------
+enum CSMsgID {
+	ID_CSNotUsed = 1;					// 为了和msg的tag对上，占位用的
+	ID_CSEcho = 2;						// echo
+	ID_CSLogin = 3;						// 登录
+	ID_CSCreatePlayer = 4;				// 创建角色
+	ID_CSRequestInit = 5;				// 初始化请求
+	ID_CSCombat = 6;					// 战斗
+	ID_CSChangeScene = 7;				// 切换场景
+	ID_CSMove = 8;						// 移动
+	ID_CSGmCmd = 9;						// gm命令
+	ID_CSEnterInstance = 10;			// 进入副本
+	ID_CSInstanceCombat = 11;			// 副本战斗
+	ID_CSLeaveInstance = 12;			// 离开副本
+	ID_CSPlayerDetailInfo = 13;			// 玩家详细信息
+	ID_CSTaskAccept = 14;				// 接任务
+	ID_CSTaskCommit = 15;				// 交任务
+	ID_CSTaskCancel = 16;				// 取消任务
+	ID_CSItemMove = 17;					// 物品移动
+	ID_CSConExpend = 18;				// 容器扩容
+	ID_CSConSort = 19;					// 容器整理
+	ID_CSResetPoints = 20;				// 洗点
+	ID_CSAssignPoints = 21;				// 投点
+	ID_CSSetFormation = 22;				// 设置阵法
+	ID_CSFormationLevelUp = 23;			// 升级阵法
+	ID_CSInstanceSaoDang = 24;			// 副本扫荡
+	ID_CSRecruitPartner = 25;			// 招募伙伴
+	ID_CSDequeuePartner = 26;			// 伙伴离队
+	ID_CSItemDel = 27;					// 删除物品
+	ID_CSGGZJInit = 28;					// 过关斩将初始化
+	ID_CSGGZJStartRound = 29;			// 过关斩将开始一轮
+	ID_CSGGZJUseCard = 30;				// 过关斩将用卡片
+	ID_CSItemForge = 31;				// 装备铸造
+	ID_CSEquipCombin = 32;				// 装备合成
+	ID_CSBuyItem = 33;					// 买物品
+	ID_CSSellItem = 34;					// 卖物品
+	ID_CSTeamQueryList = 35;			// 查询队伍列表
+	ID_CSTeamCreate = 36;				// 创建队伍
+	ID_CSTeamQuickJoin = 37;			// 快速加入
+	ID_CSTeamJoin = 38;					// 加入队伍
+	ID_CSTeamLeave = 39;				// 离开队伍
+	ID_CSTeamSetMemberPos = 40;			// 队长设置人员位置
+	ID_CSTeamSetInfo = 41;				// 设置队伍信息
+	ID_CSTeamStartCombat = 42;			// 开战了
+	ID_CSJiShen = 43;					// 祭神
+	ID_CSWJGZCast = 44;					// 万剑归宗随机
+	ID_CSWJGZCommit = 45;				// 万剑归宗确定
+	ID_CSTeamStartSingleCombat = 46;	// 单人挑战
+	ID_CSLianXinChi = 47;				// 炼心池
+	ID_CSPing = 48;						// Ping
+	ID_CSGGZJBuyCastNum = 49;			// 购买投掷次数
+	ID_CSGGZJBuyCard = 50;				// 购买卡片
+	ID_CSFMZZInit = 51;					// 封魔之战初始化
+	ID_CSGGZJDiscardCard = 52;			// 丢弃卡牌
+	ID_CSFriendInit = 53;				// 好友初始化
+	ID_CSFriendAdd = 54;				// 加好友
+	ID_CSFriendRemove = 55;				// 移除好友
+	ID_CSArenaOpen = 56;				// 开启竞技场界面
+	ID_CSArenaChallenge = 57;			// 竞技场挑战
+	ID_CSArenaRefresh = 58;				// 刷新
+	ID_CSPlayerSimpleInfo = 59;			// 玩家简单信息
+	ID_CSChat = 60;						// 玩家发送公共频道聊天信息
+	ID_CSPrivateChat = 61;				// 玩家发送私人聊天信息
+	ID_CSXMBDReset = 63;				// 重置
+	ID_CSXMBDSaoDang = 64;				// 扫荡
+	ID_CSReadOfflineChat = 65;			// 玩家已经读取离线信息
+	ID_CSGuildList = 66;				// 获得帮派列表
+	ID_CSGuildCreate = 67;				// 创建
+	ID_CSGuildLookupInfo = 68;	    	// 查看帮派信息
+	ID_CSGuildChangeName = 69;	    	// 更新帮派名字
+	ID_CSGuildChangeNotice = 70;		// 更新公告
+	ID_CSGuildDemotion = 71;			// 降职
+	ID_CSGuildDismissal = 72;	    	// 踢出
+	ID_CSGuildPromote = 73;	        	// 升职
+	ID_CSGuildDemise = 74;	        	// 禅让
+	ID_CSGuildDismiss = 75;	        	// 解散
+	ID_CSGuildQuit = 76;	        	// 退出
+	ID_CSGuildInvite = 77;	        	// 邀请
+	ID_CSGuildInvited = 78;	        	// 被邀请
+	ID_CSGuildRandPlayer = 79;			// 随机两个玩家
+	ID_CSGuildSearch = 80;				// 查找帮派
+	ID_CSItemCuiling = 81;				// 淬灵
+	ID_CSTransportOpen = 82;	// 打开传输界面
+	ID_CSTransportStart = 83;  // 开始传输
+	ID_CSTransportIntercept = 84;       // 拦截
+	ID_CSTransportDanceInSky = 85;      // 月伎飞天
+	ID_CSTransportInviteEscort = 86;    // 邀请护送
+	ID_CSTransportAnswerEscort = 87;    // 护送应答
+	ID_CSTransportClose = 88;	// 关闭传输界面
+}
+
+message CSMsg {
+	required CSMsgID id = 1;
+	
+	optional CSEcho echo= 2;
+	optional CSLogin login = 3;
+	optional CSCreatePlayer create_player = 4;
+	optional CSRequestInit request_init = 5;
+	optional CSCombat combat = 6;
+	optional CSChangeScene change_scene = 7;
+	optional CSMove move = 8;
+	optional CSGmCmd gm_cmd = 9;
+	optional CSEnterInstance enter_instance = 10;
+	optional CSInstanceCombat instance_combat = 11;
+	optional CSLeaveInstance leave_instance = 12;
+	optional CSPlayerDetailInfo player_detail_info = 13;
+	optional CSTaskAccept task_accept = 14;
+	optional CSTaskCommit task_commit = 15;
+	optional CSTaskCancel task_cancel = 16;
+	optional CSItemMove item_move = 17;
+	optional CSConExpend con_expend = 18;
+	optional CSConSort con_sort = 19;
+	optional CSResetPoints reset_points = 20;
+	optional CSAssignPoints assign_points = 21;
+	optional CSSetFormation set_formation = 22;
+	optional CSFormationLevelUp formation_level_up = 23;
+	optional CSInstanceSaoDang instance_saodang = 24;
+	optional CSRecruitPartner recruit_partner = 25;
+	optional CSDequeuePartner dequeue_partner = 26;
+	optional CSItemDel item_del = 27;
+	optional CSGGZJInit ggzj_init = 28;
+	optional CSGGZJStartRound ggzj_start_round = 29;
+	optional CSGGZJUseCard ggzj_use_card = 30;
+	optional CSItemForge item_forge = 31;
+	optional CSEquipCombin equip_combin = 32;
+	optional CSBuyItem buy_item = 33;
+	optional CSSellItem sell_item = 34;
+	optional CSTeamQueryList team_query_list= 35;
+	optional CSTeamCreate team_create = 36;
+	optional CSTeamQuickJoin team_quick_join = 37;
+	optional CSTeamJoin team_join = 38;
+	optional CSTeamLeave team_leave = 39;
+	optional CSTeamSetMemberPos team_set_member_pos = 40;
+	optional CSTeamSetInfo team_set_info = 41;
+	optional CSTeamStartCombat team_start_combat = 42;
+	optional CSJiShen jishen = 43;
+	optional CSWJGZCast wjgz_cast = 44;
+	optional CSWJGZCommit wjgz_commit = 45;
+	optional CSTeamStartSingleCombat team_start_single_combat = 46;
+	optional CSLianXinChi lian_xin_chi = 47;
+	optional CSPing ping = 48;
+	optional CSGGZJBuyCastNum ggzj_buy_cast_num = 49;
+	optional CSGGZJBuyCard ggzj_buy_card = 50;
+	optional CSFMZZInit fmzz_init = 51;
+	optional CSGGZJDiscardCard ggzj_discard_card = 52;
+	optional CSFriendInit friend_init = 53;
+	optional CSFriendAdd friend_add = 54;
+	optional CSFriendRemove friend_remove = 55;
+	optional CSArenaOpen arena_open = 56;			
+	optional CSArenaChallenge arena_challenge = 57;	
+	optional CSArenaRefresh arena_refresh = 58;
+	optional CSPlayerSimpleInfo player_simple_info = 59;
+	optional CSChat chat = 60;
+	optional CSPrivateChat private_chat = 61;
+	optional CSXMBDReset xmbd_reset = 63;
+	optional CSXMBDSaoDang xmbd_saodang = 64;
+	optional CSReadOfflineChat read_offline_chat = 65;
+	optional CSGuildList guild_list = 66;	
+	optional CSGuildCreate guild_create = 67;
+	optional CSGuildLookupInfo guild_lookupinfo = 68;	
+	optional CSGuildChangeName guild_changename = 69;	
+	optional CSGuildChangeNotice guild_changenotice = 70;	
+	optional CSGuildDemotion guild_demotion = 71;	
+	optional CSGuildDismissal guild_dismissal = 72;	
+	optional CSGuildPromote guild_promote = 73;	
+	optional CSGuildDemise guild_demise = 74;	
+	optional CSGuildDismiss guild_dismiss = 75;	
+	optional CSGuildQuit guild_quit = 76;	
+	optional CSGuildInvite guild_invite = 77;	
+	optional CSGuildInvited guild_invited = 78;	
+	optional CSGuildRandPlayer guild_randplayer = 79;
+	optional CSGuildSearch guildsearch = 80;
+	optional CSItemCuiling item_cuiling = 81;
+	optional CSTransportOpen transport_open = 82;
+	optional CSTransportStart transport_start = 83; 
+	optional CSTransportIntercept transport_intercept = 84; 
+	optional CSTransportDanceInSky transport_danceinsky = 85; 
+	optional CSTransportInviteEscort transport_inviteescort = 86; 
+	optional CSTransportAnswerEscort transport_answerescort = 87; 
+	optional CSTransportClose transport_close = 88;
+}
+
+enum SCMsgID {
+	ID_SCNotUsed = 1;						// 为了和msg的tag对上，占位用的
+	ID_SCEcho = 2;							// echo
+	ID_SCLogin = 3;							// 登录
+	ID_SCCreatePlayer = 4;					// 创建角色
+	ID_SCCombat = 5;						// 战斗
+	ID_SCRemoteMove = 6;					// 远程玩家移动
+	ID_SCPlayerEnterScene = 7;				// 进入场景
+	ID_SCAddRemotePlayer = 8;				// 远程玩家进入场景
+	ID_SCRemoveRemotePlayer = 9;			// 远程玩家离开场景
+	ID_SCPlayerInitInfo = 10;				// 玩家初始化信息
+	ID_SCInstanceInit = 11;					// 副本初始化
+	ID_SCEnterInstance = 12;				// 进入副本
+	ID_SCInstanceCombat = 13;				// 副本战斗
+	ID_SCInstanceComplete = 14;				// 副本结束
+	ID_SCLeaveInstance = 15;				// 离开副本
+	ID_SCPlayerDetailInfo = 16;				// 玩家详细属性
+	ID_SCTaskInit = 17;						// 任务初始化
+	ID_SCTaskAccept = 18;					// 接任务
+	ID_SCTaskUpdate = 19;					// 任务更新
+	ID_SCTaskCommit = 20;					// 交任务
+	ID_SCTaskCancel = 21;					// 取消任务
+	ID_SCItemInit = 22;						// 物品初始化
+	ID_SCItemUpdate = 23;					// 物品更新
+	ID_SCErrorInfo = 24;					// 调试信息
+	ID_SCConExpend = 25;					// 容器扩充
+	ID_SCAttChange = 26;					// 属性
+	ID_SCPointsChange = 27;					// 点
+	ID_SCExp = 28;							// 经验
+	ID_SCLevel = 29;						// 等级
+	ID_SCCurrency = 30;						// 货币
+	ID_SCFormationInit = 31;				// 阵法界面
+	ID_SCAntiAddictionEnable = 32;			// 防沉迷计时器
+	ID_SCAntiAddictionTimer = 33;			// 防沉迷报警
+	ID_SCInstanceSaoDang = 34; 				// 副本扫荡
+	ID_SCRecruitPartner = 35;				// 招募伙伴
+	ID_SCDequeuePartner = 36;				// 伙伴离队
+	ID_SCCurrencyInit = 37;					// 货币初始化
+	ID_SCPartnerRecruitInit = 38;			// 伙伴招募
+	ID_SCGmCmd = 39;						// gm命令返回
+	ID_SCRoleInfoInit = 40;					// 角色信息初始化
+	ID_SCAddRole = 41;						// 添加角色
+	ID_SCDelRole = 42;						// 删除角色
+	ID_SCPower = 43;						// 体力变化
+	ID_SCFormationUpdate = 44;				// 阵法更新
+	ID_SCFormationLevelUp = 45;				// 阵法升级
+	ID_SCGGZJInit = 46;						// 过关斩将初始化
+	ID_SCGGZJPlayRound = 47;				// 播放
+	ID_SCAddBuyback = 48;					// 添加到回购列表
+	ID_SCDelBuyback = 49;					// 从回购列表中删除
+	ID_SCBuybackInit = 50;					// 初始化回购列表
+	ID_SCClearBuyback = 51;					// 清空回购列表
+	ID_SCTeamList = 52;						// 队伍列表
+	ID_SCTeamInfo = 53;						// 队伍信息
+	ID_SCTeamMemberUpdate = 54;				// 队员位置更新
+	ID_SCTeamCombat = 55;					// 战斗
+	ID_SCTeamAutoStart = 56;				// 自动启动
+	ID_SCJiShen = 57;						// 祭神
+	ID_SCJiShenInit = 58;					// 祭神初始化
+	ID_SCWJGZDataUpdate = 59;				// 万剑归宗数据更新
+	ID_SCFMZZReward = 60;					// 封魔之战奖励
+	ID_SCLianXinChi = 61;					// 炼心池
+	ID_SCPing = 62;							// ping
+	ID_SCStatusUpdate = 63;					// 状态更新
+	ID_SCFMZZInit = 64;						// 封魔之战初始化
+	ID_SCFriendInit = 65;					// 好友初始化
+	ID_SCFriendAdd = 66;					// 加入好友
+	ID_SCFriendRemove = 67;					// 移除好友
+	ID_SCFriendLogOn = 68;					// 好友上线
+	ID_SCFriendLogOff = 69;					// 好友下线
+	ID_SCArenaRefresh = 70;					// 竞技场刷新
+	ID_SCArenaChallenge = 71;				// 竞技场战斗
+	ID_SCArenaRankData = 72;				// 竞技场排名数据
+	ID_SCPlayerSimpleInfo = 73;				// 玩家简单信息
+	ID_SCArenaOpen = 74;					// 开启竞技场
+	ID_SCChat = 75;							// 聊天信息
+	ID_SCPrivateChat = 76;					// 私人聊天信息
+	ID_SCXMBDInit = 77;						// 开启
+	ID_SCXMBDUpdate = 78;					// 降魔宝典更新
+	ID_SCXMBDSaoDang = 79;					// 扫荡
+	ID_SCOfflineChat = 80;					// 离线私聊信息
+	ID_SCFriendPrompt = 81;					// 被加好友提示
+	ID_SCGuildAddMember = 82; 				// 添加成员
+	ID_SCGuildDelMember = 83; 	            // 删除成员
+	ID_SCGuildNoticeUpdate = 84; 	        // 更新公告
+	ID_SCGuildNameUpdate = 85; 	            // 更新名字
+	ID_SCGuildBossRefreshTimeUpdate = 86; 	// boss刷新时间更新
+	ID_SCGuildMemberPositionUpdate = 87; 	// 成员职位更新
+	ID_SCGuildContributionUpdate = 88; 	    // 帮贡更新
+	ID_SCGuildDismiss = 89; 	            // 解散
+	ID_SCGuildList = 90; 	                // 帮派简单信息列表
+	ID_SCGuildInvited = 91; 	            // 被邀请
+	ID_SCGuildInit = 92;					// 帮派初始化
+	ID_SCGuildDetail = 93;					// 详细信息
+	ID_SCGuildInviteResult = 94;			// 被邀请人答复
+	ID_SCGuildRandPlayer = 95;				// 随机两个玩家
+	ID_SCTransportOpen = 96; 		// 打开传输界面
+	ID_SCTransportIntercept = 97;           // 拦截
+	ID_SCTransportInvitedEscort = 98;       // 邀请护送
+	ID_SCTransportAnswerEscort = 99;        // 护送应答
+	ID_SCTransportUpdate = 100;    // 传输更新
+}
+
+message SCMsg {
+	required SCMsgID id = 1;
+	
+	optional SCEcho echo= 2;
+	optional SCLogin login = 3;
+	optional SCCreatePlayer create_player = 4;
+	optional SCCombat combat = 5;
+	optional SCRemoteMove remote_move = 6;
+	optional SCPlayerEnterScene player_enter_scene = 7;
+	optional SCAddRemotePlayer add_remote_player = 8;
+	optional SCRemoveRemotePlayer remove_remote_player = 9;
+	optional SCPlayerInitInfo player_init_info = 10;
+	optional SCInstanceInit instance_init = 11;
+	optional SCEnterInstance enter_instance= 12;
+	optional SCInstanceCombat instance_combat = 13;
+	optional SCLeaveInstance leave_instance = 14;
+	optional SCInstanceComplete instance_complete = 15;
+	optional SCPlayerDetailInfo player_detail_info = 16;
+	optional SCTaskInit task_init = 17;
+	optional SCTaskAccept task_accept = 18;
+	optional SCTaskUpdate task_update = 19;
+	optional SCTaskCommit task_commit = 20;
+	optional SCTaskCancel task_cancel = 21;
+	optional SCItemInit item_init = 22;
+	optional SCItemUpdate item_update = 23;
+	optional SCErrorInfo error_info = 24;			// 调试信息
+	optional SCConExpend con_expend = 25;			
+	optional SCAttChange att_change = 26;
+	optional SCPointsChange points_change = 27;
+	optional SCExp exp = 28;
+	optional SCLevel level = 29;
+	optional SCCurrency currency = 30;
+	optional SCFormationInit formation_init = 31;
+	optional SCAntiAddictionEnable anti_addiction_enable = 32;
+	optional SCAntiAddictionTimer anti_addiction_timer = 33;
+	optional SCInstanceSaoDang instance_saodang = 34;
+	optional SCRecruitPartner recruit_partner = 35;
+	optional SCDequeuePartner dequeue_partner = 36;
+	optional SCCurrencyInit currency_init = 37;
+	optional SCPartnerRecruitInit partner_recruit_init = 38;
+	optional SCGmCmd gm_cmd = 39;
+	optional SCRoleInfoInit role_info_init = 40;
+	optional SCAddRole add_role = 41;
+	optional SCDelRole del_role = 42;
+	optional SCPower power = 43;
+	optional SCFormationUpdate formation_update = 44;
+	optional SCFormationLevelUp formation_levelup = 45;
+	optional SCGGZJInit ggzj_init = 46;
+	optional SCGGZJPlayRound ggzj_play_round = 47;
+	optional SCAddBuyback add_buyback = 48;	
+	optional SCDelBuyback del_buyback = 49;	
+	optional SCBuybackInit buyback_init = 50;
+	optional SCClearBuyback clear_buyback = 51;
+	optional SCTeamList team_list = 52;
+	optional SCTeamInfo team_info = 53;
+	optional SCTeamMemberUpdate team_member_update = 54;
+	optional SCTeamCombat team_combat = 55;
+	optional SCTeamAutoStart team_auto_start = 56;
+	optional SCJiShen jishen = 57;
+	optional SCJiShenInit jishen_init = 58;		
+	optional SCWJGZDataUpdate wjgz_data_update = 59;
+	optional SCFMZZReward fmzz_reward = 60;
+	optional SCLianXinChi lian_xin_chi = 61;
+	optional SCPing ping = 62;
+	optional SCStatusUpdate status_update = 63;
+	optional SCFMZZInit fmzz_init = 64;
+	optional SCFriendInit friend_init = 65;
+	optional SCFriendAdd friend_add = 66;
+	optional SCFriendRemove friend_remove = 67;
+	optional SCFriendLogOn friend_logon = 68;
+	optional SCFriendLogOff friend_logoff = 69;
+	optional SCArenaRefresh arena_refresh = 70;
+	optional SCArenaChallenge arena_challenge = 71;
+	optional SCArenaRankData arena_rankdata = 72;
+	optional SCPlayerSimpleInfo player_simple_info = 73;
+	optional SCArenaOpen arena_open = 74;
+	optional SCChat chat = 75;
+	optional SCPrivateChat private_chat = 76;
+	optional SCXMBDInit xmbd_init = 77;
+	optional SCXMBDUpdate xmbd_update = 78;
+	optional SCXMBDSaoDang xmbd_saodang = 79;
+	optional SCOfflineChat offline_chat = 80;
+	optional SCFriendPrompt friend_prompt = 81;
+	optional SCGuildAddMember guild_addmember = 82; 	
+	optional SCGuildDelMember guild_delmember = 83; 	
+	optional SCGuildNoticeUpdate guild_noticeupdate = 84; 	
+	optional SCGuildNameUpdate guild_nameupdate = 85; 	
+	optional SCGuildBossRefreshTimeUpdate guild_bossrefreshtimeupdate = 86; 	
+	optional SCGuildMemberPositionUpdate guild_memberpositionupdate = 87; 	
+	optional SCGuildContributionUpdate guild_contributionupdate = 88; 	
+	optional SCGuildDismiss guild_dismiss = 89; 	
+	optional SCGuildList guild_list = 90; 	
+	optional SCGuildInvited guild_invited = 91; 	
+	optional SCGuildInit guild_init = 92;
+	optional SCGuildDetail guild_detail = 93;
+	optional SCGuildInviteResult guild_inviteresult = 94;
+	optional SCGuildRandPlayer guild_randplayer = 95;
+	optional SCTransportOpen transport_open = 96; 
+	optional SCTransportIntercept transport_intercept = 97; 
+	optional SCTransportInvitedEscort transport_invitedescort = 98; 
+	optional SCTransportAnswerEscort transport_answerescort = 99; 
+	optional SCTransportUpdate transport_update = 100;
+}
+

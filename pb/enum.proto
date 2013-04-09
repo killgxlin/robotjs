@@ -1,0 +1,407 @@
+package pb;
+
+// 角色性别
+enum ERoleGender {
+	ERG_BEGIN = 0;
+	ERG_Male = 0;
+	ERG_Female = 1;
+	ERG_END = 2;
+	ERG_NUM = 3;
+};
+
+// 角色职业
+enum ERoleClass {
+	ERC_BEGIN = 0;
+	ERC_QingTian = 0;
+	ERC_QiLing = 1;
+	ERC_RenBu = 2;
+	ERC_JianGang = 3;
+	ERC_ShanWu = 4;
+	ERC_YiYin = 5;
+	ERC_END = 6;
+	ERC_NUM = 6;
+};
+
+// 角色属性
+enum ERoleAtt {
+	ERA_Null = -1;
+	ERA_BEGIN = 0;
+
+	// 一级属性 ---------------------------------------------------------------------
+	ERA_1_BEGIN	= 0;
+	ERA_LiLiang						= 0 ;			// 力量
+	ERA_ZhiHui						= 1 ;			// 智慧
+	ERA_MinJie						= 2 ;			// 敏捷
+	ERA_GenGu						= 3 ;			// 根骨
+	ERA_DanShi						= 4 ;			// 胆识
+	ERA_1_END = 5;
+	ERA_1_NUM = 5;
+
+	// 二级属性 ---------------------------------------------------------------------
+	ERA_2_BEGIN = 5;
+	ERA_AttackPuWu					= 5 ;			// 普通物理攻击力	
+	ERA_AttackJueWu					= 6 ;			// 绝技物理攻击力	
+	ERA_AttackPuFa					= 7 ;			// 普通法术攻击力
+	ERA_AttackJueFa					= 8 ;			// 绝技法术攻击力
+	ERA_AttackPuChuan				= 9 ;			// 普通穿刺攻击力
+	ERA_AttackJueChuan				= 10;			// 绝技穿刺攻击力
+	ERA_HPMax						= 11;			// 生命值上限
+	ERA_HitLvl						= 12;			// 命中等级
+	ERA_DodgeLvl					= 13;			// 闪避等级
+	ERA_CritLvl						= 14;			// 暴击等级
+	ERA_CritCoefInc					= 15;			// 暴击系数增加
+	ERA_CritFlatInc					= 16;			// 暴击数值增加
+	ERA_CritFlatDec					= 17;			// 暴击数值减少
+	ERA_MoveSpeed					= 18;			// 移动速度值
+	ERA_MPInit						= 19;			// 气势初始值
+	ERA_DefendPuWu					= 20;			// 普通物理防御力
+	ERA_DefendJueWu					= 21;			// 绝技物理防御力
+	ERA_DefendPuFa					= 22;			// 普通法术防御力
+	ERA_DefendJueFa					= 23;			// 绝技法术防御力
+	ERA_DefendPuChuan				= 24;			// 普通穿刺防御力
+	ERA_DefendJueChuan				= 25;			// 绝技穿刺防御力	
+	ERA_DamageFloatAdd	 			= 26;			// 伤害浮动加成值
+	ERA_DamageFloatJianMian 		= 27;			// 伤害浮动减免值
+	ERA_HoldLvl						= 28;			// 坚守等级
+	ERA_HoldCoefInc 				= 29;			// 坚守系数增加
+	ERA_HoldFlatInc 				= 30;			// 坚守数值增加
+	ERA_HoldFlatDec 				= 31;			// 坚守数值减少
+	ERA_AntiCritLvl					= 32;			// 韧性等级
+	ERA_AntiHoldLvl					= 33;			// 反坚守等级
+	ERA_DamageFlatIncQingTian		= 34;			// 对职业1的伤害增加
+	ERA_DamageFlatIncQiLing			= 35;			// 对职业2的伤害增加
+	ERA_DamageFlatIncRenBu			= 36;			// 对职业3的伤害增加
+	ERA_DamageFlatIncJianGang		= 37;			// 对职业4的伤害增加
+	ERA_DamageFlatIncShanWu			= 38;			// 对职业5的伤害增加
+	ERA_DamageFlatIncYiYin			= 39;			// 对职业6的伤害增加
+	ERA_DamageFlatDecQingTian		= 40;			// 对职业1的伤害减少
+	ERA_DamageFlatDecQiLing			= 41;			// 对职业2的伤害减少
+	ERA_DamageFlatDecRenBu			= 42;			// 对职业3的伤害减少
+	ERA_DamageFlatDecJianGang		= 43;			// 对职业4的伤害减少
+	ERA_DamageFlatDecShanWu			= 44;			// 对职业5的伤害减少
+	ERA_DamageFlatDecYiYin			= 45;			// 对职业6的伤害减少
+	ERA_HealInc						= 46;			// 治疗效果增加
+	ERA_HealDec						= 47;			// 治疗效果减少
+	ERA_ZoomInc						= 48;			// 缩放值增加
+	ERA_ZoomDec						= 49;			// 缩放值减少
+	ERA_AttackLevel					= 50;			// 小队先攻值
+	
+	ERA_2_END = 51;
+	ERA_2_NUM = 51;
+
+	// ---------------------------------------------------------------------
+	ERA_END = 51;
+	ERA_NUM = 51;
+};
+
+// 目标方
+enum ETargetFaction {
+	ETF_Us = 0;			// 我方
+	ETF_Them = 1;		// 敌方
+	ETF_Both = 2;		// 双方
+};
+
+// 选取目标模式
+enum ETargetMode						 {						//						misc
+	ETM_Caster = 0;		// 释放者位置			
+	ETM_Target = 1;		// 先对应行然后其他行	 0前面优先1后面优先
+	ETM_AttMin = 2;		// 某个属性值最小的		att
+	ETM_AttMax = 3;		// 某个属性值最大的		att
+	ETM_Sequence = 4;	// 出手顺序选择目标		0前面优先1后面优先
+	ETM_CurHP = 5;		// 当前生命值			0最小1最大
+	ETM_CurMP = 6;		// 当前气势值			0最小1最大
+};
+
+// 目标选取范围
+enum ESelectForm {
+	ESF_Single = 0;		// 单体
+	ESF_Row = 1;		// 行
+	ESF_Col = 2;		// 列
+	ESF_All = 3;		// 所有
+};
+
+// 角色状态掩码
+enum ERoleStateMask {
+	ERSM_Null = 0x0;
+	ERSM_Sleep = 0x1;	// 昏睡
+	ERSM_Dizzy = 0x2;	// 眩晕
+	ERSM_Dummy = 0x4;	// 封技
+	ERSM_Dead  = 0x8;	// 死亡
+};
+
+// 技能结果掩码
+enum ESkillResultMask {
+	EDRM_Null	= 0x0;
+	EDRM_Hit	= 0x1;	// 命中
+	EDRM_Dodge	= 0x2;	// 闪避
+	EDRM_Crit	= 0x4;	// 暴击
+	EDRM_Hold	= 0x8;	// 坚守
+};
+
+// 货币类型
+enum ECurrencyType {
+	ECT_TongQian = 0;			// 铜钱
+	ECT_YuanBao = 1;			// 元宝
+	ECT_XianGuo = 2;			// 鲜果
+	ECT_WuCaiShi = 3;			// 五彩石
+	ECT_XiangHuo = 4;			// 香火
+	ECT_MingGeSuiPian = 5;		// 命格碎片
+	ECT_JingJieDian = 6;		// 境界点
+	ECT_YuanQi = 7;				// 元气
+	ECT_ShengWang = 8;			// 声望
+};
+
+// 任务完成条件
+enum ETaskTarget {
+	ETT_Auto = 0;				// 自动完成
+	ETT_KillRole = 1;			// 击杀
+	ETT_GainItem = 2;			// 获得物品
+	ETT_InstanceComplete = 3;	// 通副本
+};
+
+// 任务类型
+enum ETaskType {
+	ETT_Main = 0;				// 主线任务
+	ETT_SubLine = 1;			// 支线任务
+	ETT_Elite = 2;				// 精英任务
+	ETT_Prof = 3;				// 职业任务
+	ETT_Repute = 4;				// 声望任务
+	ETT_Guide = 5;				// 引导任务
+};
+
+// 任务标志
+enum ETaskFlag {
+	ETF_NotCancel = 0x1;			// 不能放弃
+	ETF_NotAcceptAfterCancel = 0x2;	// 放弃后不能再接取
+	ETF_DoMoreThenOnce = 0x4;		// 可以做多次
+};
+
+// 容器类型
+enum EContainerType {
+	EConT_EquipBarBegin = 0;	// 装备栏开始	每个角色的装备栏类型为EConT_EquipBarBegin+角色的protoid
+	EConT_EquipBarEnd = 1000;	// 结束
+	EConT_Bag = 1000;			// 背包
+	EConT_Store = 1001;			// 仓库
+};
+
+// 容器大小
+enum EContainerSize {
+	EConSize_BagDefault = 18;	// 背包默认
+	EConSize_BagMax = 36;		// 背包最大
+
+	EConSize_StoreDefault = 23;	// 仓库默认
+	EConSize_StoreMax = 54;		// 仓库最大
+
+	EConSize_EquipBarSize = 6;		// 装备栏
+	EConSize_EquipWeaponSlot = 1;	// 武器位置
+};
+
+enum EEquipSlot {
+	EEquipS_Neck = 0;			// 脖子
+	EEquipS_Weapon = 1;			// 武器
+	EEquipS_Soul = 2;			// 魂器
+	EEquipS_Head = 3;			// 头冠
+	EEquipS_Body = 4;			// 法袍
+	EEquipS_Foot = 5;			// 靴子
+};
+
+// 物品
+enum EItemType {
+	EIT_Equip = 0;				// 装备
+	EIT_Stuff = 1;				// 材料
+	EIT_Quest = 2;				// 任务物品
+	EIT_Scroll = 3;				// 卷轴
+	EIT_Cuiling = 4;			// 淬灵道具
+};
+
+// 初始化序列
+enum EInitType {
+	EInitT_PlayerInitInfo = 1;			// 玩家信息
+	EInitT_ItemInit = 2;				// item
+	EInitT_TaskInit = 3;				// task
+	EInitT_InstanceInit = 4;			// instance
+	EInitT_CurrencyInit = 5;			// 货币
+	EInitT_PartnerRecruitInit = 6;		// 伙伴招募
+	EInitT_RoleInfoInit = 7;			// 角色信息
+	EInitT_FormationInit = 8;			// 阵法
+	EInitT_BuybackListInit = 9;			// 回购
+	EInitT_JiShenInit = 10;				// 祭神
+	EInitT_XMBDInit = 11;				// 降魔宝典
+	EInitT_GuildInit = 12;				// 帮派
+	EInitT_InitOk = 13;					// 初始化结束
+};
+
+// 消耗类型
+enum EConsumeType {
+	EConsumeType_Currency = 0;			// 货币
+	EConsumeType_Power = 1;				// 体力
+	EConsumeType_Item = 2;				// 物品
+};
+
+// 限制类型
+enum ERestrictType {					//				type		value
+	ERestrictT_Currency = 0;			// 货币			货币类型	货币值
+	ERestrictT_Power = 1;				// 体力						体力值
+	ERestrictT_Item = 2;				// 物品			物品id		个数
+	ERestrictT_LeaderLevel = 3;			// 主角等级					等级
+	ERestrictT_AcceptTask = 4;			// 接取任务		任务id
+	ERestrictT_CommitTask = 5;			// 交了任务		任务id
+	ERestrictT_OpenInstance = 6;		// 开启副本		副本id
+	ERestrictT_LeaderClass = 7;			// 主角职业		职业
+};
+
+// 限制模式
+enum ERestrictMode {
+	ERestrictM_AND = 0;					// 且
+	ERestrictM_OR = 1;					// 或
+};
+
+// 限制运算
+enum ERestrictOperate {
+	ERestrictO_GE = 0;					// 大于等于
+	ERestrictO_LE = 1;					// 小于等于
+	ERestrictO_G = 2;					// 大于
+	ERestrictO_L = 3;					// 小于
+	ERestrictO_EQ = 4;					// 等于
+	ERestrictO_NE = 5;					// 不等于
+	ERestrictO_TRUE = 6;				// 判断为真
+	ERestrictO_FALSE = 7;				// 判断为假
+};
+
+// 体力
+enum EPowerConst {
+	EPowerC_Limit = 200;				// 体力上限
+};
+
+enum EGGZJBuffEffect {
+	EGBE_BeiKun = 0;					// 被困
+	EGBE_YiDongJianBan = 1;				// 移动减半
+	EGBE_FanXiangYiDong = 2;			// 反向移动
+	EGBE_SuiJiYiDong = 3;				// 随机移动
+	EGBE_OuShuYiDong = 4;				// 单数移动
+	EGBE_ModCombatAtt = 5;				// 战斗时改变属性
+	
+	EGBE_MaoZei = 7;					// 青牛老道
+	EGBE_QingNiuLaoDao = 8;				// 青牛老道
+	EGBE_FaLaoYiJi = 9;					// 法老遗迹
+	EGBE_XueRenDeYouYi = 10;			// 雪人友谊
+	EGBE_NiePan = 11;					// 涅磐
+	EGBE_ChenChuan = 12;				// 沉船
+	EGBE_JinDouYun = 13;				// 筋斗云
+	EGBE_WuWei = 14;					// 无为
+};
+
+// 过关斩将相关
+enum EGGZJMisc {
+	EGM_SuShaCombats = 3;			// 肃杀令的持续战斗数
+	EGM_SuShaAttmodid = 25000;		// 肃杀令的属性影响
+	
+	EGM_ZhanJiangCombats = 3;		// 斩将令持续战斗数
+	EGM_ZhanJiangAttmodid = 25001;	// 斩将令的属性影响
+};
+
+// 卡牌生成类型
+enum ECardGenType {
+	ECGT_Pass = 0;					// 关卡生成
+	ECGT_Monster = 1;				// 普通怪物生成
+	ECGT_Card = 2;					// 随机卡生成
+	ECGT_NUM = 3;
+};
+
+
+enum EGGZJCardType {
+	EGCT_Step = 0;					// 向前走
+	EGCT_AddGBuff = 1;				// 加gbuff
+	EGCT_WuXieKeJi = 2;				// 无懈可击
+	EGCT_ZhaoCaiMao = 3;			// 招财猫
+	EGCT_SuiJiKa = 4;				// 随机卡
+};
+
+enum EGGZJBuffCountType {
+	EGBCT_Immediate = 0;				// 0 立即 
+	EGBCT_Cast = 1;						// 1 投骰子次数 
+	EGBCT_Combat = 2;					// 2 战斗次数
+};
+
+// 装备品质
+enum EEquipQuality {
+	EEquipQ_White = 0;					// 白
+	EEquipQ_Green = 1;					// 绿
+	EEquipQ_Blue = 2;					// 蓝
+	EEquipQ_Purple = 3;					// 紫
+	EEquipQ_Orange = 4;					// 橙
+};
+
+//祭神
+enum EJiShen {
+	EJiShen_ShenNum = 24;				// 祭神里面神的数量
+};
+
+// 万剑归宗
+enum EWJGZ {
+	EWJGZ_ChangShiNum = 10;				// 尝试次数
+	EWJGZ_YunGongNum = 10;				// 运功次数
+};
+
+// 玩家状态计数类型
+enum EStatusCountType {
+	ESCT_Duration = 0;					// 时间
+	ESCT_CombatTimes = 1;				// 战斗次数	
+	ESCT_TiLi = 2;						// 体力
+};
+
+// 状态
+enum ESpecialStatusID {
+	ESSID_TiLi = 100;					// 体力
+};
+
+// 好友
+enum EFriendConst {
+	EFriendC_FriendLimit = 100;
+	EFriendC_BlackLimit = 100;
+	EFriendC_RecentLimit = 20;
+};
+
+enum EFriendType {
+	EFriendT_Friend = 0;			// 好友
+	EFriendT_Black = 1;			// 黑名单
+	EFriendT_Recent = 2;			// 最近联系
+};
+
+// 聊天
+enum EChatChannel {
+	EChatChannelT_System = 0;
+	EChatChannelT_Inform = 1;
+
+	EChatChannelT_World = 10;
+	EChatChannelT_Guild = 11;
+	EChatChannelT_Scene = 12;
+	EChatChannelT_Help = 13;
+};
+
+// 帮派权限
+enum EGuildPermission {
+	EGPer_Promotion = 0;		// 升职
+	EGPer_Demotion = 1;			// 降职
+	EGPer_Dismissal = 2;		// 踢出
+	EGPer_Demise = 3;			// 禅让
+	EGPer_Dismiss = 4;			// 解散
+	EGPer_Quit = 5;				// 退出
+	EGPer_Notice = 6;			// 更新帮派信息
+	EGPer_Verify = 7;			// 审核申请入帮玩家
+	EGPer_SetRefreshTime = 8;	// 设置帮派boss更新时间
+	EGPer_Accuse = 9;			// 弹劾
+	EGPer_Function = 10;		// 功能
+	EGPer_Rename = 11;			// 改名
+	EGPer_Invite = 12;			// 邀请
+	EGPer_SIZE = 13;
+};
+
+// 帮派职位
+enum EGuildPosition {
+	EGPos_Master = 0;			// 帮主
+	EGPos_Second = 1;			// 副帮主
+	EGPos_Elder = 2;			// 长老
+	EGPos_People = 3;			// 帮众
+	EGPos_SIZE = 4;
+};

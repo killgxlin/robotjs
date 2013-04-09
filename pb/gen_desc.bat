@@ -1,0 +1,1 @@
+protoc --descriptor_set_out=msg.desc --include_imports *.proto

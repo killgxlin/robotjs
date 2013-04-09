@@ -1,0 +1,281 @@
+package pb;
+import "enum.proto";
+
+
+///////////////////////////////////////////////////////////////////////////////
+message PbRole {
+	optional string name = 1;				// 名字
+	required int32 pos = 2;					// 位置
+	required uint32 protoid = 3;			// 原型id
+	required int32 HP = 4;					// 初始hp
+	required int32 MP = 5;					// 初始mp
+	required bool has_jue = 6; 				// 是否有绝技
+};
+
+// 哈哈哈哈哈哈
+message PbEffect {							// 加buff，伤害，治疗，召唤
+	optional int32 damage = 1;				// 伤害量
+	optional int32 skill_result_mask = 2;	// 命中暴击格挡闪避什么的
+	optional uint32 buff_add = 3; 			// 添加的buff
+	optional int32 heal = 4;				// 治疗量
+	optional PbRole new_partner = 5; 		// 召唤出来的伙伴
+};
+
+message PbRoleEffect {
+	required int32 unit = 1;				// 角色位置
+	required int32 pos = 2;					// 角色位置
+	required int32 final_HP = 3;			// 角色最终hp
+	required int32 final_MP = 4;			// 角色最终mp
+	required bool can_cast_jue = 5;			// 是否可以释放绝技
+	
+	required uint32 role_state_mask = 6;	// 角色最终状态
+	repeated PbEffect effect = 7;			// 作用效果
+	repeated uint32 buff_remove = 8;		// 删除的buff
+};
+
+message PbCasterInfo {
+	required uint32 skill_protoid = 1;		// 技能id
+	required int32 unit = 2;				// 释放者的位置
+	required int32 pos = 3;					// 释放者的位置
+	required bool jue = 4;					// 是否是绝技
+	required int32 final_HP = 5;			// 释放者最终hp
+	required int32 final_MP = 6;			// 释放者最终mp
+	required bool can_cast_jue = 7;			// 是否可以释放绝技
+	
+	optional int32 cast_unit = 8;			// 释放技能的位置
+	optional int32 cast_pos = 9;			// 释放技能的位置
+}
+
+message PbCast {
+	optional PbCasterInfo caster_info = 1;	// 释放者信息
+	repeated PbRoleEffect target_effect = 2;// 目标效果
+};
+
+message PbRound {
+	repeated PbCast cast = 1;				// 所有释放
+};
+
+message PbUnit {
+	repeated PbRole role = 1;				// 战斗角色
+	required int32 unit = 2;				// 位置
+};
+
+message PbCombat {
+	repeated PbUnit unit = 1;				// 战斗单元
+	repeated PbRound round = 2;				// 所有轮
+	required int32 win = 3;					// 胜利方
+};
+
+message PbCombat3v3 {
+	repeated PbCombat combat = 1;			// 战斗
+};
+
+message PbGroupRound {
+	repeated PbCombat3v3 combat_3v3 = 1;	// 一回合战斗
+};
+
+message PbCombatNvN {
+	repeated PbGroupRound group_round = 1;	// 轮
+};
+
+// 封魔之战  ---------------------------------------------------------------------------------------------------------
+// 队伍简单信息
+message PbTeamSimpleInfo {
+	required uint32 teamid = 1;		// 队伍id
+	required bool auto_start = 2;		// 自动开战
+	required uint64 leaderid = 3;		// 队长id
+	required string leadername = 4;		// 队长名字
+	required int32 member_num = 5;		// 队员数量
+};
+
+message PbTeamMemberInfo {
+	required uint64 id = 1;			// 成员id
+	optional uint32 protoid = 2;		// proto id
+	optional string name = 3;		// 成员名字
+	optional int32 level = 4;		// 成员等级
+};
+
+// 玩家初始化 远程玩家信息 地图同步消息 ---------------------------------------------------------------------------------------------------------
+// 玩家移动
+message PbPlayerMove {
+	required int32 dst_x = 3;				// 终点x
+	required int32 dst_y = 4;				// 终点y
+};
+
+// 远程玩家信息
+message PbRemotePlayerInfo {
+	required uint64 playerid = 1;			// id
+	required string name = 2;				// 主角名称
+	required uint32 protoid = 3;			// 主角原型id
+	required int32 level = 4;				// 主角等级
+	required int32 move_speed = 5;			// 速度	
+	required int32 pos_x = 6;				// 位置x
+	required int32 pos_y = 7;				// 位置y
+};
+
+// 玩家详细信息 （人物信息界面） ---------------------------------------------------------------------------------------------------------
+message PbRoleDetailInfo {
+	required uint32 protoid = 1;			// 原型id
+	repeated int32 att = 2;					// 属性
+	required int64 exp = 3;					// 经验
+	required int32 level = 4;				// 等级
+	required PbContainer equip_bar = 5;		// 装备栏
+};
+
+// 属性 ---------------------------------------------------------------------------------------------------------
+message PbAttValue {
+	required ERoleAtt att = 1;				// 属性
+	required int32 value = 2;				// 值
+};
+
+// 任务 ---------------------------------------------------------------------------------------------------------
+message PbTask {
+	required uint32 taskid = 1;				// 任务id
+	required int32 count = 2;				// 任务计数
+	required bool can_commit = 3;			// 可以提交
+};
+
+// 副本 ---------------------------------------------------------------------------------------------------------
+message PbRewardItem {
+	required uint32 item_type = 1;			// 物品id
+	required uint32 item_num = 2;			// 物品个数
+};
+
+message PbReward {
+	required uint32 rewardid = 1;			// 奖励id
+	required float rate = 2;				// 奖励衰减
+	repeated PbRewardItem rand_item = 3;	// 所有随机出来的物品
+};
+
+// 物品 ----------------------------------------------------------------------------------------------------------
+message PbEquip {
+	required int32 forge_level = 1;			// 装备铸造等级
+	required EEquipQuality quality = 2;		// 品级
+};
+
+message PbItem {
+	required int32 con = 1;					// 容器类型
+	required int32 slot = 2;				// 容器内位置
+	required uint32 protoid = 3;			// 物品id
+	required int32 num = 4;					// 数量
+	
+	optional PbEquip equip = 5;				// 装备数据
+};
+
+message PbContainer {
+	required int32 slot_num = 1;			// 格子数
+	repeated PbItem item = 2;				// 物品
+};
+
+// 过关斩将 ----------------------------------------------------------------------------------------------------------
+message PbGGZJBuff {
+	required uint32 gbuffid = 1;			// buffid
+	required int32 count = 2;				// buff的计数 count为-1时buff被删除
+};
+
+message PbGGZJAction {
+	optional int32 cast_num = 1;			// 剩余投掷次数
+	optional int32 cur_pos = 2;				// 当前位置
+	optional int32 del_card = 3;			// 删除卡片
+	optional int32 add_card = 4;			// 获得卡片
+	optional int32 step_rewardid = 5;		// 每步给的奖励
+	optional PbCombat combat = 6;			// 战斗
+	optional PbReward reward = 7;			// 战斗奖励
+	repeated PbGGZJBuff gbuff = 8;			// buff变化
+	optional int32 trigger_pass = 9;		// 触发关卡
+	optional int32 buy_cast_num_times = 10;	// 今日购买投掷次数的次数
+	optional int32 buy_card_times = 11;		// 今日购买卡片的次数
+};
+
+// 简单玩家信息 ------------------------------------------------------------------------------------------------------
+message PbSimplePlayer {
+	required uint64 playerid = 1;			// id
+	required uint32 protoid = 2;			// proto
+	required string name = 3;			// 名字
+	required int32 level = 4;			// 等级
+	required bool online = 5;			// 是否在线
+};
+
+// 状态---------------------------------------------------------------------------------------------------------
+message PbStatus {
+	required uint32 statusid = 1;			// id
+	required float count = 2;				// 计数
+};
+
+// 竞技场 ---------------------------------------------------------------------------------------------------------
+message PbArenaPlayerInfo {
+	required int32 rank = 1;				// 排名
+	required uint64 playerid = 2;			// 玩家id
+	required string name = 3;				// 名称
+	required uint32 protoid = 4;			// 原型id
+	required bool beated = 5;				// 击败
+	required int32 level = 6;				// 等级
+};
+
+message PbArenaCombatLog {
+	required uint64 opponentid = 1;			// 对手id
+	required string opponent_name = 2;		// 对手名称
+	required bool win = 3;					// 我赢了吗？
+	required int32 result_rank = 4;			// 我的最终排名
+	required uint64 date = 5;				// 战斗日期 1970 年 1 月 1 日午夜以来的日期 毫秒为单位
+};
+
+// 降魔宝鉴 ---------------------------------------------------------------------------------------------------------
+message PbXMBDSceneInfo {
+	required uint32 sceneid = 1;			// sceneid
+	required int32 reset_times = 2;			// 重置次数
+	repeated uint32 everyday = 3;			// 每日
+	repeated uint32 permanent = 4;			// 永久
+	required int32 boss_count = 5;			// 战胜boss次数
+	required int32 boss_reset_count = 6;	// 重置boss次数
+};
+
+// 聊天 ---------------------------------------------------------------------------------------------------------
+message PbOfflineChat {
+	required PbSimplePlayer player = 1;		// 发送信息玩家
+	repeated string content = 2;			// 内容
+};
+
+// 帮派 ---------------------------------------------------------------------------------------------------------
+message PbGuildMemberInfo {
+	required uint64 playerid = 1; 			// id
+	required uint32 protoid = 2; 			// id
+	required string name = 3; 				// 名字
+	required int32 level = 4; 				// 等级
+	required EGuildPosition position = 5;	// 职务
+	required int32 reputation = 6; 			// 声望
+	required int32 score1v1 = 7; 			// 1v1竞技
+	required int32 contribution_today = 8; 	// 今日贡献
+	required int32 contribution_total = 9; 	// 总贡献
+	required bool online = 10;				// 登录
+}
+
+// 帮派简单信息
+message PbGuildSimpleInfo {
+	required uint32 guildid = 1;	// id
+	required string name = 2;		// 名字
+	required int32 level = 3;		// 等级
+	required string mastername = 4;	// 帮主名字
+	required int32 member_num = 5;	// 人数
+}
+
+// 帮派详细信息
+message PbGuildDetailInfo {
+	required uint32 guildid = 1;					// id
+	required string name = 2;						// 名称
+	required int32 level = 3;						// 等级
+	required int32 rank = 4;						// 排名
+	required string notice = 5;						// 公告
+	repeated PbGuildMemberInfo member_info = 6;		// 很多 帮派成员详细信息
+}
+
+// 运输 ---------------------------------------------------------------------------------------------------------
+message PbTransport {
+    required uint32 treasure = 1; 
+    required uint64 sender = 2;
+    required double remain_seconds = 3;
+    required bool matcher = 4;
+    optional uint64 escort = 5;
+    repeated uint64 interceptor = 6;
+}
+

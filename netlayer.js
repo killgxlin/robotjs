@@ -55,17 +55,17 @@ Netlayer.prototype.sendMsg = function sendMsg(csmsg){
 
 module.exports = Netlayer;
 
-//var netlayer = new Netlayer();
-//
-//netlayer.on('scmsg', function(scmsg){
-//  console.log(scmsg);
-//});
-//
-//netlayer.connect(9876, 'localhost', function(){
-//  netlayer.sendMsg({
-//    id: "ID_CSLogin",
-//    login: {
-//      playerId: 1
-//    }
-//  });
-//});
+// var netlayer = new Netlayer();
+// 
+// netlayer.on('scmsg', function(scmsg){
+//   console.log(scmsg);
+// });
+// 
+// netlayer.connect(9876, 'localhost', function(){
+//   netlayer.sendMsg({
+//     id: "ID_CSLogin",
+//     login: {
+//       playerId: 1
+//     }
+//   });
+// });
