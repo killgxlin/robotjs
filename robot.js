@@ -6,36 +6,26 @@ function Robot(playerid){
   this.netlayer = new Netlayer();
   var robot = this;
   this.netlayer.on('scmsg', function handleSCMsg(scmsg_){
-    function actionFinished(){
-      timer.setTimeout(function(){
-        robot.nextAction(actionFinished);
-      }, 1000);
-    }
     switch(scmsg_.id){
       case 'ID_SCCreatePlayer':
         robot.createPlayer();
         break;
-      default:
-        robot.nextAction(actionFinished);
-        break;
     }
+    console.log('player'+robot.playerid + ' ' + scmsg_.id);
   });
 }
 
-Robot.prototype.nextAction = function nextAction(callback){
-  if(Math.random()<0.2){
+Robot.prototype.nextAction = function nextAction(){
+  if(Math.random()<0.1){
     this.changeScene();
-    callback();
     return;
   }
   if(Math.random()<0.5){
     this.move();
-    callback();
     return;
   }
   if(Math.random()<0.5){
     this.chat();
-    callback();
     return;
   }
 }
@@ -49,6 +39,10 @@ Robot.prototype.logon = function logon(){
         playerId: robot.playerid
       }
     });
+
+    timer.setInterval(function(){
+      robot.nextAction();
+    }, 1000);
   });
 }
 
@@ -70,7 +64,7 @@ Robot.prototype.changeScene = function changeScene(){
   this.netlayer.sendMsg({
     id: "ID_CSChangeScene",
     changeScene: {
-      dstSceneid: 2
+      dstSceneid: Math.floor(Math.random()*17)
     }
   });
 }
@@ -80,7 +74,7 @@ Robot.prototype.chat = function chat(){
     id: "ID_CSChat",
     chat: {
       channel: "EChatChannelT_World",
-      content: "hello"
+      content: "hello from " + this.playerid 
     }
   });
 }
@@ -90,8 +84,8 @@ Robot.prototype.move = function move(){
     id: "ID_CSMove",
     move: {
       playerMove: {
-	dstX: 200,
-	dstY: 200
+	dstX: Math.random()*2440 + 30,
+	dstY: Math.random()*286 + 325
       }
     }
   });
@@ -99,5 +93,5 @@ Robot.prototype.move = function move(){
 
 module.exports = Robot;
 
-var robot = new Robot(1);
-robot.logon();
+// var robot = new Robot(1);
+// robot.logon();

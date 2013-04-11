@@ -15,6 +15,9 @@ function Netlayer() {
   this.needLen = 0;
 
   var obj = this;
+  obj.socket.on('error', function onError(err){
+    console.log(err);
+  });
   obj.socket.on('data', function onData(data){
     data.copy(obj.buffer, obj.actLen);
     obj.actLen += data.length;
