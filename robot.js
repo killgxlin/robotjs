@@ -1,17 +1,39 @@
 var Netlayer = require('./netlayer');
 var timer = require('timers');
 
-function Robot(playerid){
+function Robot(playerid, addr){
   this.playerid = playerid;
   this.netlayer = new Netlayer();
+  this.serverAddr = addr; 
+  this.initStep = 1;
   var robot = this;
   this.netlayer.on('scmsg', function handleSCMsg(scmsg_){
     switch(scmsg_.id){
       case 'ID_SCCreatePlayer':
         robot.createPlayer();
         break;
+      case 'ID_SCLogin':
+	robot.requestInit(robot.initStep++);
+        timer.setInterval(function(){
+          robot.nextAction();
+        }, 1000);
+        break;
+      case 'ID_SCPlayerInitInfo':
+      case 'ID_SCInstanceInit':
+      case 'ID_SCItemInit':
+      case 'ID_SCTaskInit':
+      case 'ID_SCCurrencyInit':
+      case 'ID_SCPartnerRecruitInit':
+      case 'ID_SCRoleInfoInit':
+      case 'ID_SCFormationInit':
+      case 'ID_SCBuybackInit':
+      case 'ID_SCJiShenInit':
+      case 'ID_SCXMBDInit':
+      case 'ID_SCGuildInit':
+	robot.requestInit(robot.initStep++);
+	break;   
     }
-    console.log('player'+robot.playerid + ' ' + scmsg_.id);
+    //console.log(scmsg_.id);
   });
 }
 
@@ -32,7 +54,7 @@ Robot.prototype.nextAction = function nextAction(){
 
 Robot.prototype.logon = function logon(){
   var robot = this;
-  robot.netlayer.connect(9876, 'localhost', function(){
+  robot.netlayer.connect(robot.serverAddr.port, robot.serverAddr.host, function(){
     robot.netlayer.sendMsg({
       id: "ID_CSLogin",
       login: {
@@ -40,9 +62,6 @@ Robot.prototype.logon = function logon(){
       }
     });
 
-    timer.setInterval(function(){
-      robot.nextAction();
-    }, 1000);
   });
 }
 
@@ -87,6 +106,15 @@ Robot.prototype.move = function move(){
 	dstX: Math.random()*2440 + 30,
 	dstY: Math.random()*286 + 325
       }
+    }
+  });
+}
+
+Robot.prototype.requestInit = function requestInit(step){
+  this.netlayer.sendMsg({
+    id: "ID_CSRequestInit", 
+    requestInit: {
+      type: step
     }
   });
 }

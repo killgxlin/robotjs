@@ -1,12 +1,12 @@
 var Robot = require('./robot');
 
-function Manager(total){
+function Manager(total, addr){
   this.offlineRobots = new Array();
   this.logingRobots = new Array();
   this.onlineRobots = new Array();
 
   for(var i=0; i<total; ++i) {
-    var robot = new Robot(i);
+    var robot = new Robot(i, addr);
     this.offlineRobots.push(robot);
   }
 }
@@ -44,6 +44,6 @@ Manager.prototype.turnoff = function(num){
     offlineRobots.push(robot);
   }
 }
-
-var manager = new Manager(10);
-manager.turnon(10);
+var num = 1000;
+var manager = new Manager(num, {port:9876, host:'localhost'});
+manager.turnon(num);

@@ -17,21 +17,26 @@ set autoindent
 set background=dark
 set backspace=indent,eol,start
 set helplang=Ch
+set hlsearch
+set incsearch
+set ruler
 set softtabstop=4
-set window=45
+set window=56
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
-cd E:\mynode\robot
+cd E:\shmj\project_x\js
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
 badd +56 netlayer.js
-badd +0 robot.js
-badd +0 ~\_vimrc
+badd +125 robot.js
+badd +7 ~\_vimrc
+badd +24 pb\msg.proto
+badd +37 manager.js
 args netlayer.js robot.js
-edit robot.js
+edit manager.js
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -41,10 +46,10 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 87 + 87) / 175)
-exe 'vert 2resize ' . ((&columns * 87 + 87) / 175)
+exe 'vert 1resize ' . ((&columns * 118 + 117) / 235)
+exe 'vert 2resize ' . ((&columns * 116 + 117) / 235)
 argglobal
-edit robot.js
+edit manager.js
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -147,15 +152,15 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 59 - ((43 * winheight(0) + 22) / 44)
+let s:l = 47 - ((46 * winheight(0) + 27) / 55)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-59
-normal! 0
+47
+normal! 011l
 wincmd w
 argglobal
-edit ~\_vimrc
+enew
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -257,17 +262,9 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-silent! normal! zE
-let s:l = 9 - ((8 * winheight(0) + 22) / 44)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-9
-normal! 012l
 wincmd w
-2wincmd w
-exe 'vert 1resize ' . ((&columns * 87 + 87) / 175)
-exe 'vert 2resize ' . ((&columns * 87 + 87) / 175)
+exe 'vert 1resize ' . ((&columns * 118 + 117) / 235)
+exe 'vert 2resize ' . ((&columns * 116 + 117) / 235)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
