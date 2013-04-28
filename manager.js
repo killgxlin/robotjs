@@ -44,6 +44,6 @@ Manager.prototype.turnoff = function(num){
     offlineRobots.push(robot);
   }
 }
-var num = 1000;
+var num = 200;
 var manager = new Manager(num, {port:9876, host:'localhost'});
 manager.turnon(num);

@@ -1,1 +1,1 @@
-protoc --descriptor_set_out=msg.desc --include_imports *.proto
+protoc --descriptor_set_out=msg.desc --include_imports all.proto enum.proto object.proto msg.proto

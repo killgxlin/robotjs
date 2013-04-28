@@ -149,6 +149,8 @@ enum ECurrencyType {
 	ECT_JingJieDian = 6;		// 境界点
 	ECT_YuanQi = 7;				// 元气
 	ECT_ShengWang = 8;			// 声望
+    ECT_LingQi = 9;             // 灵气
+    ECT_RongYu = 10;            // 荣誉
 };
 
 // 任务完成条件
@@ -212,6 +214,7 @@ enum EItemType {
 	EIT_Quest = 2;				// 任务物品
 	EIT_Scroll = 3;				// 卷轴
 	EIT_Cuiling = 4;			// 淬灵道具
+	EIT_WuXing = 5;				// 五行道具
 };
 
 // 初始化序列
@@ -281,15 +284,16 @@ enum EGGZJBuffEffect {
 	EGBE_OuShuYiDong = 4;				// 单数移动
 	EGBE_ModCombatAtt = 5;				// 战斗时改变属性
 	
-	EGBE_MaoZei = 7;					// 青牛老道
-	EGBE_QingNiuLaoDao = 8;				// 青牛老道
-	EGBE_FaLaoYiJi = 9;					// 法老遗迹
+	EGBE_MaoZei = 7;					// 毛贼
+	EGBE_YunYouDaoShi = 8;				// 云游道士
+	EGBE_XuanZhenBaoXia = 9;			// 玄真宝匣
 	EGBE_XueRenDeYouYi = 10;			// 雪人友谊
 	EGBE_NiePan = 11;					// 涅磐
 	EGBE_ChenChuan = 12;				// 沉船
 	EGBE_JinDouYun = 13;				// 筋斗云
 	EGBE_WuWei = 14;					// 无为
 };
+
 
 // 过关斩将相关
 enum EGGZJMisc {
@@ -404,4 +408,21 @@ enum EGuildPosition {
 	EGPos_Elder = 2;			// 长老
 	EGPos_People = 3;			// 帮众
 	EGPos_SIZE = 4;
+};
+
+// 五行
+enum EWuXingType {
+    EWXT_Null = -1;
+    EWXT_Jin = 0;
+    EWXT_Mu = 1;
+    EWXT_Sui = 2;
+    EWXT_Huo = 3; 
+    EWXT_Tu = 4; 
+    EWXT_SIZE = 5;
+};
+
+// 运输
+enum ETransport {
+	ET_LiuXianQunCost = 200;
+	ET_RandTreasureCost = 2;
 };

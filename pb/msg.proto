@@ -52,24 +52,65 @@ message SCCombat {
 	required uint32 scene_protoid = 2;
 }
 
+// 心法
+message CSSoulLevelUp {
+}
+
+message SCSoulLevelUp {
+    required int32 soul_level = 1;
+}
+
+// 仙天福地
+message CSXTFDStudy {
+    required uint32 role_protoid = 1;
+    required bool yuanbao = 2;
+};
+
+message SCXTFDStudy {
+    required uint32 role_protoid = 1;
+    required int32 xtfd_exp = 2;
+    optional int32 xtfd_level = 3;
+};
+
+// 技能
+message CSSelectSkill {
+    required int32 role_protoid  = 1;
+    required uint32 skillid = 2;
+}
+
+message SCSelectSkill {
+    required int32 role_protoid = 1;
+    required uint32 cur_skillid = 2;
+}
+
+message SCAddSkill {
+    required int32 role_protoid = 1;
+    required uint32 new_skillid = 2;
+}
+
 // 玩家初始化 远程玩家信息 场景同步消息 ---------------------------------------------------------------------------------------------------------
 // 玩家初始化信息
 message SCPlayerInitInfo {
-	required uint64 playerid = 1;				// id
-	required uint32 protoid = 2;				// 原型id
-	required string name = 3;					// 名字
-	required int32 level = 4;					// 等级
-	required int64 yuanbao = 5;					// 元宝
-	required int64 tongqian = 6;				// 铜钱
-	required int32 HP = 7;						// 最大生命
-	required int32 power = 8;					// 体力
-	required int32 move_speed = 9;				// 速度	
+	required uint64 playerid = 1;			// id
+	required uint32 protoid = 2;			// 原型id
+	required string name = 3;			// 名字
+	required int32 level = 4;			// 等级
+	required int64 yuanbao = 5;			// 元宝
+	required int64 tongqian = 6;			// 铜钱
+	required int32 HP = 7;				// 最大生命
+	required int32 power = 8;			// 体力
+	required int32 move_speed = 9;			// 速度	
 	required int32 wjgz_changshi_count = 10;	// 万剑归宗尝试次数
 	required int32 wjgz_yungong_count = 11;		// 万剑归宗运功次数
 	required int32 wjgz_zhidao_count = 12;		// 万剑归宗指导次数
-	repeated int32 wjgz_jian_type = 13;			// 万剑归宗剑类型
+	repeated int32 wjgz_jian_type = 13;		// 万剑归宗剑类型
 	required int32 wjgz_today_jian_type = 14;	// 万剑归宗今日剑类型
-	repeated PbStatus status = 15;				// 当前状态
+	repeated PbStatus status = 15;			// 当前状态
+	required int32 mountid = 16;			// 骑乘id
+	required int32 soul_level = 17;			// 心法等级
+	required EWuXingType zhenfa_wuxing = 18;	// 阵法属性
+	required int32 reward_rank = 19;		// 领取奖励的排名
+	required int32 zcjb_count = 20;			// 招财进宝次数
 }
 
 // 切换场景
@@ -174,7 +215,7 @@ message SCPower {
 	required int32 power = 1;		
 }
 
-// 副本消息 ---------------------------------------------------------------------------------------------------------
+// 代币消息 ---------------------------------------------------------------------------------------------------------
 message SCCurrencyInit {
 	repeated int64 currency = 1;
 }
@@ -215,6 +256,7 @@ message SCInstanceComplete {
 
 // 离开副本
 message CSLeaveInstance {
+	required bool reward = 1;				// 是否要奖励
 }
 
 message SCLeaveInstance {
@@ -601,15 +643,27 @@ message SCWJGZDataUpdate {
 }
 
 // 炼心池 --------------------------------------------------------------------------------
-message CSLianXinChi {
-	
+message CSLianXinChiRank {
 }
 
-message SCLianXinChi {
+message SCLianXinChiRank {
+    repeated PbLianXinChiRank rank_list = 1;
+}
+
+message CSLianXinChiReward {
+}
+
+message SCLianXinChiReward {
+    required PbReward reward = 1;
+}
+
+message CSLianXinChiCombat {
+}
+
+message SCLianXinChiCombat {
 	repeated PbCombat combat = 1;		// 战斗
-	required PbReward reward = 2;		// 奖励
-	required int32 kill_num = 3;		// 杀数量
-	required int32 round_used = 4;		// 用了多少轮
+	required int32 kill_num = 2;		// 杀数量
+	required int32 round_used = 3;		// 用了多少轮
 }
 
 // 好友 --------------------------------------------------------------------------------
@@ -705,6 +759,13 @@ message SCArenaRefresh {
 message SCArenaRankData {
 	required int32 rank = 1;						// 排名
 	required int32 score = 2;						// 积分
+}
+
+message CSArenaGetReward {
+}
+
+message SCArenaGetReward {
+    required PbReward reward = 1;                   // 奖励
 }
 
 // 聊天 --------------------------------------------------------------------------------
@@ -900,10 +961,13 @@ message CSTransportOpen{
 message CSTransportClose{
 }
 
+message CSTransportRandTreasure{
+	required bool top = 1;
+}
+
 message CSTransportStart{
-    required uint32 treasure = 1;
-    required bool matcher = 2;
-    required bool escort = 3;
+    required bool matcher = 1;
+    required bool escort = 2;
 }
 
 message CSTransportIntercept{
@@ -922,14 +986,28 @@ message CSTransportAnswerEscort{
     required bool accept = 2;
 }
 
+message CSTransportAccelerate{
+}
+
 message SCTransportOpen{
-    repeated PbTransport transport = 1;
+    required int32 transport_count = 1;
+    required int32 intercept_count = 2;
+    required int32 escort_count = 3;
+    required int32 treasure_refresh_count = 4;
+    required uint32 treasureid = 5;
+	required int32 danceinsky_count = 6;
+    repeated PbTransport transport = 7;
+}
+
+message SCTransportStart{
+    required PbCombat combat = 1;
 }
 
 message SCTransportIntercept{
     required uint64 sender = 1;
     required uint32 treasure = 2;
     required PbCombat combat = 3;
+    required PbReward reward = 4;
 }
 
 message SCTransportInvitedEscort{
@@ -944,6 +1022,62 @@ message SCTransportAnswerEscort{
 message SCTransportUpdate{
     repeated PbTransport transport = 1;
     repeated uint64 expire = 2;
+    optional int32 transport_count = 3;
+    optional int32 intercept_count = 4;
+    optional int32 escort_count = 5;
+    optional int32 treasure_refresh_count = 6;
+    optional uint32 treasureid = 7;
+	optional int32 danceinsky_count = 8;
+}
+
+// 骑乘 -------------------------------------------------------------------------------
+message CSMountRide{
+	required int32 mountid = 1;
+}
+
+message SCMountRide{
+	required uint64 playerid = 1;
+	required int32 mountid = 2;
+}
+
+// 五行 -------------------------------------------------------------------------------
+message CSWuXingLevelUp{
+    required uint32 role_protoid = 1;
+    required EWuXingType wuxing = 2;
+}
+
+message CSSetZhenFaWuXing{
+    required EWuXingType zhenfa_wuxing = 1;
+}
+
+message SCWuXingLevelUp{
+    required uint32 role_protoid = 1;
+    required EWuXingType wuxing = 2;
+    required int32 wuxing_level = 3;
+}
+
+message SCWuXingBuffRefresh{
+    required uint32 role_protoid = 1;
+    required uint32 wuxing_buffid = 2;
+}
+
+message CSJingJieTuPo{
+    required int32 role_protoid = 1;
+    repeated int32 formation = 2;
+}
+
+message SCJingJieTuPo{
+    required int32 role_protoid = 1;
+    required int32 jingjie = 2;
+    required PbCombat combat = 3;
+}
+
+message CSZCJBDeal{
+}
+
+message SCZCJBDeal{
+	required int32 today_count = 1;
+	required uint32 tongqian = 2;
 }
 
 // all --------------------------------------------------------------------------------
@@ -994,7 +1128,7 @@ enum CSMsgID {
 	ID_CSWJGZCast = 44;					// 万剑归宗随机
 	ID_CSWJGZCommit = 45;				// 万剑归宗确定
 	ID_CSTeamStartSingleCombat = 46;	// 单人挑战
-	ID_CSLianXinChi = 47;				// 炼心池
+	ID_CSLianXinChiCombat = 47;				// 炼心池
 	ID_CSPing = 48;						// Ping
 	ID_CSGGZJBuyCastNum = 49;			// 购买投掷次数
 	ID_CSGGZJBuyCard = 50;				// 购买卡片
@@ -1035,6 +1169,19 @@ enum CSMsgID {
 	ID_CSTransportInviteEscort = 86;    // 邀请护送
 	ID_CSTransportAnswerEscort = 87;    // 护送应答
 	ID_CSTransportClose = 88;	// 关闭传输界面
+	ID_CSTransportRandTreasure = 89;    // 随机宝物
+	ID_CSTransportAccelerate = 90;      // 加速
+	ID_CSMountRide = 91;			// 骑乘
+    ID_CSSoulLevelUp = 92;              // 升级心法
+    ID_CSSelectSkill = 93;              // 选择技能
+    ID_CSXTFDStudy = 94;                // 仙天福地学习
+    ID_CSWuXingLevelUp = 95;            // 升级五行属性
+    ID_CSSetZhenFaWuXing = 96;          // 设置阵法五行属性
+    ID_CSJingJieTuPo = 97;              // 境界突破
+    ID_CSZCJBDeal = 98;                 // 招财聚宝
+    ID_CSLianXinChiRank = 99;           // 炼心池排名
+    ID_CSLianXinChiReward = 100;        // 炼心池奖励
+    ID_CSArenaGetReward = 101;          // 竞技场领取奖励
 }
 
 message CSMsg {
@@ -1085,7 +1232,7 @@ message CSMsg {
 	optional CSWJGZCast wjgz_cast = 44;
 	optional CSWJGZCommit wjgz_commit = 45;
 	optional CSTeamStartSingleCombat team_start_single_combat = 46;
-	optional CSLianXinChi lian_xin_chi = 47;
+	optional CSLianXinChiCombat lianxinchi_combat = 47;
 	optional CSPing ping = 48;
 	optional CSGGZJBuyCastNum ggzj_buy_cast_num = 49;
 	optional CSGGZJBuyCard ggzj_buy_card = 50;
@@ -1126,6 +1273,19 @@ message CSMsg {
 	optional CSTransportInviteEscort transport_inviteescort = 86; 
 	optional CSTransportAnswerEscort transport_answerescort = 87; 
 	optional CSTransportClose transport_close = 88;
+	optional CSTransportRandTreasure transport_randtreasure = 89;
+	optional CSTransportAccelerate transport_accelerate = 90;
+	optional CSMountRide mount_ride = 91;
+    optional CSSoulLevelUp soul_levelup = 92;
+    optional CSSelectSkill select_skill = 93;
+    optional CSXTFDStudy xtfd_study = 94;
+    optional CSWuXingLevelUp wuxing_levelup = 95;
+    optional CSSetZhenFaWuXing setzhenfa_wuxing = 96;
+    optional CSJingJieTuPo jingjie_tupo = 97;
+    optional CSZCJBDeal zcjb_deal = 98;
+    optional CSLianXinChiRank lianxinchi_rank = 99;
+    optional CSLianXinChiReward lianxinchi_reward = 100;
+    optional CSArenaGetReward arena_getreward = 101;
 }
 
 enum SCMsgID {
@@ -1189,7 +1349,7 @@ enum SCMsgID {
 	ID_SCJiShenInit = 58;					// 祭神初始化
 	ID_SCWJGZDataUpdate = 59;				// 万剑归宗数据更新
 	ID_SCFMZZReward = 60;					// 封魔之战奖励
-	ID_SCLianXinChi = 61;					// 炼心池
+	ID_SCLianXinChiCombat = 61;					// 炼心池
 	ID_SCPing = 62;							// ping
 	ID_SCStatusUpdate = 63;					// 状态更新
 	ID_SCFMZZInit = 64;						// 封魔之战初始化
@@ -1229,6 +1389,19 @@ enum SCMsgID {
 	ID_SCTransportInvitedEscort = 98;       // 邀请护送
 	ID_SCTransportAnswerEscort = 99;        // 护送应答
 	ID_SCTransportUpdate = 100;    // 传输更新
+	ID_SCTransportStart = 101;      // 开始运输
+	ID_SCMountRide = 102;			// 骑乘
+    ID_SCSoulLevelUp = 103;         // 心法升级
+    ID_SCSelectSkill = 104;         // 选择技能
+    ID_SCAddSkill = 105;              // 添加技能
+    ID_SCXTFDStudy = 106;               // 仙天福地 学习
+    ID_SCWuXingLevelUp = 107;           // 升级五行
+    ID_SCWuXingBuffRefresh = 108;       // 五行buff更新
+    ID_SCJingJieTuPo = 109;             // 境界突破
+    ID_SCZCJBDeal = 110;                // 招财聚宝
+    ID_SCLianXinChiRank = 111;          // 炼心池
+    ID_SCLianXinChiReward = 112;        // 炼心池
+    ID_SCArenaGetReward = 113;          // 竞技场领取奖励
 }
 
 message SCMsg {
@@ -1293,7 +1466,7 @@ message SCMsg {
 	optional SCJiShenInit jishen_init = 58;		
 	optional SCWJGZDataUpdate wjgz_data_update = 59;
 	optional SCFMZZReward fmzz_reward = 60;
-	optional SCLianXinChi lian_xin_chi = 61;
+	optional SCLianXinChiCombat lianxinchi_combat = 61;
 	optional SCPing ping = 62;
 	optional SCStatusUpdate status_update = 63;
 	optional SCFMZZInit fmzz_init = 64;
@@ -1333,5 +1506,18 @@ message SCMsg {
 	optional SCTransportInvitedEscort transport_invitedescort = 98; 
 	optional SCTransportAnswerEscort transport_answerescort = 99; 
 	optional SCTransportUpdate transport_update = 100;
+	optional SCTransportStart transport_start = 101;
+	optional SCMountRide mount_ride = 102;
+    optional SCSoulLevelUp soul_levelup = 103;
+    optional SCSelectSkill select_skill = 104;
+    optional SCAddSkill add_skill = 105;
+    optional SCXTFDStudy xtfd_study = 106;
+    optional SCWuXingLevelUp wuxing_levelup = 107;
+    optional SCWuXingBuffRefresh wuxing_buffrefresh = 108;
+    optional SCJingJieTuPo jingjie_tupo = 109;
+    optional SCZCJBDeal zcjb_deal = 110;
+    optional SCLianXinChiRank lianxinchi_rank = 111;
+    optional SCLianXinChiReward lianxinchi_reward = 112;
+    optional SCArenaGetReward arena_getreward = 113;
 }
 

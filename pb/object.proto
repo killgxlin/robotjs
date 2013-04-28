@@ -6,10 +6,12 @@ import "enum.proto";
 message PbRole {
 	optional string name = 1;				// 名字
 	required int32 pos = 2;					// 位置
-	required uint32 protoid = 3;			// 原型id
+	required uint32 protoid = 3;				// 原型id
 	required int32 HP = 4;					// 初始hp
 	required int32 MP = 5;					// 初始mp
-	required bool has_jue = 6; 				// 是否有绝技
+	required int32 level = 6;				// 等级
+	required uint32 curskill = 7;				// 当前选择技能
+    required uint32 wuxing_buffid = 8;          // 五行buff
 };
 
 // 哈哈哈哈哈哈
@@ -111,6 +113,7 @@ message PbRemotePlayerInfo {
 	required int32 move_speed = 5;			// 速度	
 	required int32 pos_x = 6;				// 位置x
 	required int32 pos_y = 7;				// 位置y
+	required int32 mountid = 8;				// 坐骑id
 };
 
 // 玩家详细信息 （人物信息界面） ---------------------------------------------------------------------------------------------------------
@@ -120,6 +123,12 @@ message PbRoleDetailInfo {
 	required int64 exp = 3;					// 经验
 	required int32 level = 4;				// 等级
 	required PbContainer equip_bar = 5;		// 装备栏
+    required uint32 cur_skill = 6;          // 当前技能
+    repeated uint32 skill = 7;              // 技能
+    required int32 xtfd_exp = 8;            // 仙天福地经验
+    required int32 xtfd_level = 9;          // 仙天福地等级
+    repeated int32 wuxing_level = 10;       // 五行等级
+    required int32 wuxing_buff = 11;        // 五行buff
 };
 
 // 属性 ---------------------------------------------------------------------------------------------------------
@@ -194,6 +203,7 @@ message PbSimplePlayer {
 	required string name = 3;			// 名字
 	required int32 level = 4;			// 等级
 	required bool online = 5;			// 是否在线
+	required uint32 guildid = 6;		// 帮会id
 };
 
 // 状态---------------------------------------------------------------------------------------------------------
@@ -279,3 +289,10 @@ message PbTransport {
     repeated uint64 interceptor = 6;
 }
 
+// 炼心池 -------------------------------------------------------------------------------------------------------
+message PbLianXinChiRank {
+    required uint64 playerid = 1;
+    required string name = 2;
+    required int32 xinmo_level = 3;
+    required int32 kill_num = 4;
+}

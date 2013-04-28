@@ -30,6 +30,7 @@ function Robot(playerid, addr){
       case 'ID_SCJiShenInit':
       case 'ID_SCXMBDInit':
       case 'ID_SCGuildInit':
+	  case 'ID_SCSyncAttInit':
 	robot.requestInit(robot.initStep++);
 	break;   
     }
